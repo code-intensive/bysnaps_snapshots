@@ -3,7 +3,12 @@
 
 name: snapshots-github-actions
 
-on: push
+on:
+  push:
+
+  pull_request:
+    branches:
+    - main
 
 #A workflow job running sequentially
 jobs:
