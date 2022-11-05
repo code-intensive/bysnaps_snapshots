@@ -61,3 +61,10 @@ repos:
     types: [python]
     pass_filenames: false
     args: [.]
+
+  - id: pytest-check
+    name: pytest-check
+    entry: pytest
+    language: system
+    pass_filenames: false
+    always_run: true

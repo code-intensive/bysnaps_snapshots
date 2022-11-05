@@ -1,12 +1,10 @@
-from buysnaps_snapshots.main import app
 from fastapi.testclient import TestClient
 from starlette.status import HTTP_200_OK
 
-client = TestClient(app)
 
-
-def test_health_ok() -> None:
-    url = app.url_path_for("health_check")
-    response = client.request("get", url)
+def test_health_ok(client: TestClient, api_endpoints: dict[str, str]) -> None:
+    health_check_enpoint = api_endpoints["health_check"]
+    response = client.request("get", health_check_enpoint)
+    assert response.content == b"null"
     assert response.status_code == HTTP_200_OK
-    assert response.data is None
+    assert response.url.endswith("/v1/snap-shots/health-check")

@@ -11,7 +11,7 @@ snaps_router = APIRouter(prefix="/snap-shots")
 
 
 snaps_router.add_api_route(
-    path="/health",
+    path="/health-check",
     endpoint=health_check,
     methods=["get"],
     summary="Service health check",
