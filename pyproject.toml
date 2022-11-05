@@ -44,3 +44,23 @@ testpaths = [
     "tests",
     "integration",
 ]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+src_paths = ["snapshots",]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+allow_subclassing_any = true
+allow_untyped_calls = true
+pretty = true
+show_error_codes = true
+implicit_reexport = true
+allow_untyped_decorators = true
+warn_unused_ignores = false
+warn_return_any = false
+namespace_packages = true
+plugins = ["sqlalchemy.ext.mypy.plugin"]
+
