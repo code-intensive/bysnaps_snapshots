@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "buysnaps-snapshots"
+version = "0.1.0"
+description = "The snap management service for Buy Snaps Inc."
+authors = ["Tega Ukavwe"]
+readme = "README.md"
+packages = [{include = "buysnaps_snapshots"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+poetry-add-requirements-txt = "^1.1.1"
+cloudinary = "1.30.0"
+fastapi = "0.85.1"
+numpy = "1.23.4"
+opencv-python = "4.6.0.66"
+pillow = "9.2.0"
+pydantic = "1.10.2"
+python-dotenv = "0.21.0"
+qrcode = "7.3.1"
+uvicorn = "0.19.0"
+sqlalchemy = "1.4.42"
+yarl = "1.8.1"
+pre-commit = "2.20.0"
+mypy = "0.982"
+isort = "5.10.1"
+flake8 = "5.0.4"
+black = "22.10.0"
+alembic = "^1.8.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
