@@ -1,11 +1,11 @@
 from abc import ABCMeta, abstractmethod
 
-from models.snaps import ORMSnap, Snap
+from models.snaps import DBSnap, Snap
 
 
 class ISnapManager(metaclass=ABCMeta):
     @abstractmethod
-    async def create(self, snap_data: ORMSnap) -> Snap:
+    async def create(self, snap_data: DBSnap) -> Snap:
         """Creates a snap shot from the ORMSnamepShot"""
         ...
 

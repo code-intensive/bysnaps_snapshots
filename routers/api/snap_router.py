@@ -5,7 +5,7 @@ from controllers.api.snap_controllers import (
     health_check,
 )
 from fastapi.routing import APIRouter
-from models.snaps import ORMSnap
+from models.snaps import DBSnap
 
 snaps_router = APIRouter(prefix="/snap-shots")
 
@@ -29,7 +29,7 @@ snaps_router.add_api_route(
     path="",
     endpoint=get_snaps,
     methods=["get"],
-    response_model=list[ORMSnap],
+    response_model=list[DBSnap],
     summary="Retrieve all snaps",
 )
 
@@ -37,6 +37,6 @@ snaps_router.add_api_route(
     path="/{snap_id: str}",
     endpoint=get_snap,
     methods=["get"],
-    response_model=ORMSnap,
+    response_model=DBSnap,
     summary="Retrieve a snap by it's id",
 )

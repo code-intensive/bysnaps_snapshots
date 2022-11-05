@@ -2,7 +2,7 @@ from datetime import datetime
 
 from database.managers.interfaces.snap_manager_interface import ISnapManager
 from database.models.models import Snap
-from models.snaps import ORMSnap
+from models.snaps import DBSnap
 from models.snaps import Snap as RawSnap
 from modules.cloud_snaps.interfaces.cloud_snap_interface import ICloudSnapService
 from modules.generators.interfaces.snap_generator_interface import ISnapGenerator
@@ -25,7 +25,7 @@ class SnapService:
         snap_id = generate_uuid("snap")
         snap = self.snap_generator.generate_snap(snap_id)
         cloudinary_snap = await self.snap_cloud_service.upload_snap(snap)
-        orm_snap = ORMSnap(
+        orm_snap = DBSnap(
             id=snap_id,
             created_at=datetime.now(),
             snap_url=cloudinary_snap.url,

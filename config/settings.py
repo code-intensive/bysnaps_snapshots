@@ -2,7 +2,6 @@ import enum
 from os import getenv
 from pathlib import Path
 from tempfile import gettempdir
-from typing import Optional
 
 import cloudinary
 from dotenv import load_dotenv
@@ -66,17 +65,17 @@ class Settings(BaseSettings):
     db_scheme = str(getenv("DB_SCHEME"))
     db_host = str(getenv("DB_HOST"))
     db_port = int(getenv("DB_PORT", 0))
-    db_user: Optional[str] = getenv("DB_USER")
-    db_pass: Optional[str] = getenv("DB_PASS")
+    db_user: str | None = getenv("DB_USER")
+    db_pass: str | None = getenv("DB_PASS")
     db_base = str(getenv("DB_BASE"))
     db_echo = bool(getenv("DB_ECHO"))
 
     # Variables for Redis
     redis_host: str = "snapshots-redis"
     redis_port: int = 6379
-    redis_user: Optional[str] = None
-    redis_pass: Optional[str] = None
-    redis_base: Optional[int] = None
+    redis_user: str | None = None
+    redis_pass: str | None = None
+    redis_base: int | None = None
 
     # Variables for RabbitMQ
     rabbit_host: str = "snapshots-rmq"

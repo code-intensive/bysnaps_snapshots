@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 class Snap(BaseModel):
     """
-    A Snap holds required data for QRCode creation
+    A Snap holds required data for QRCode creation, used for post
     """
 
     products: list[Product] = Field(
@@ -26,10 +26,9 @@ class Snap(BaseModel):
     )
 
 
-class ORMSnap(Snap):
+class DBSnap(Snap):
     """
-    A Snap contains data from a SnapData, this data is used to
-    create QRCode for the requested items and transactions
+    An existing snap from the database containing id, snap_url and created_at
     """
 
     id: str
