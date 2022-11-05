@@ -4,7 +4,7 @@ inline-quotes = double
 max-line-length = 88
 extend-ignore = E203
 docstring_style=sphinx
-
+color=auto
 ignore =
   ; Found `f` string
   WPS305,
