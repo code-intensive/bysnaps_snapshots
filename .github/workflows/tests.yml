@@ -3,8 +3,7 @@
 
 name: snapshots-github-actions
 
-on:
-  push:
+on: push
 
 #A workflow job running sequentially
 jobs:
