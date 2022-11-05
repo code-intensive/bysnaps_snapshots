@@ -1,11 +1,10 @@
-from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from database.managers.interfaces.snap_manager_interface import ISnapManager
 from database.models.models import Snap
 from database.utils.model_converter import snap_from_pydantic
 from database.utils.sql import fetch_snap_query, fetch_snaps_query
+from fastapi import HTTPException
 from models.snaps import ORMSnap
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class SnapManager(ISnapManager):
@@ -31,7 +30,7 @@ class SnapManager(ISnapManager):
         snaps = await self._session.execute(fetch_snaps_query())
         return snaps.scalars().fetchall()
 
-    async def delete(self, snap_id) -> Snap:
+    async def delete(self, snap_id: str) -> Snap:
         """Deletes a snap shot from the databases using it's snap id"""
         await self._session.delete(snap_id)
         return await self._session.flush()

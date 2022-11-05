@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 .vscode/PythonImportHelper-v2-Completion.json
 snap_shot.db
+logs

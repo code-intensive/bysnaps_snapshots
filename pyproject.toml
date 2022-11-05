@@ -26,6 +26,7 @@ isort = "5.10.1"
 flake8 = "5.0.4"
 black = "22.10.0"
 alembic = "^1.8.1"
+requests = "^2.28.1"
 
 
 [build-system]
@@ -61,6 +62,4 @@ implicit_reexport = true
 allow_untyped_decorators = true
 warn_unused_ignores = false
 warn_return_any = false
-namespace_packages = true
 plugins = ["sqlalchemy.ext.mypy.plugin"]
-
