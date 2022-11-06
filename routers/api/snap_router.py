@@ -15,6 +15,10 @@ snaps_router.add_api_route(
     endpoint=health_check,
     methods=["get"],
     summary="Service health check",
+    response_description=(
+        "Returns `null`, it simply shows "
+        "that the service is up with a HTTP_200_OK status code"
+    ),
 )
 
 snaps_router.add_api_route(
@@ -23,6 +27,7 @@ snaps_router.add_api_route(
     methods=["post"],
     status_code=201,
     summary="Create a new snap",
+    response_description="Returns a newly created `DBSnap`",
 )
 
 snaps_router.add_api_route(
