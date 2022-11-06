@@ -159,6 +159,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .vscode/PythonImportHelper-v2-Completion.json
-# snap_shot.db
-logs
 snap_shot.db
+logs
