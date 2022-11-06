@@ -25,13 +25,13 @@ class SnapService:
         snap_id = generate_uuid("snap")
         snap = self.snap_generator.generate_snap(snap_id)
         cloudinary_snap = await self.snap_cloud_service.upload_snap(snap)
-        orm_snap = DBSnap(
+        db_snap = DBSnap(
             id=snap_id,
             created_at=datetime.now(),
             snap_url=cloudinary_snap.url,
             **raw_snap.dict()
         )
-        return await self.snap_manager.create(orm_snap)
+        return await self.snap_manager.create(db_snap)
 
     async def get_snaps(self) -> list[Snap]:
         return await self.snap_manager.fetchall()

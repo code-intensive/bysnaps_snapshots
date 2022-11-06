@@ -1,15 +1,14 @@
 import pytest
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from main import app
 
 
-@pytest.fixture(scope="module", name="client")
+@pytest.fixture
 def client() -> TestClient:
     return TestClient(app)
 
 
-@pytest.fixture(scope="module", name="api_endpoints")
-def api_endpoints() -> dict[str, str]:
-    return {
-        "health_check": app.url_path_for("health_check"),
-    }
+@pytest.fixture
+def fast_api_app() -> FastAPI:
+    return app

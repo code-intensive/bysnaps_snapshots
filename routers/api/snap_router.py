@@ -34,7 +34,7 @@ snaps_router.add_api_route(
 )
 
 snaps_router.add_api_route(
-    path="/{snap_id: str}",
+    path="/{snap_id}",
     endpoint=get_snap,
     methods=["get"],
     response_model=DBSnap,
