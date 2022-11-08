@@ -12,34 +12,87 @@ on:
 
 #A workflow job running sequentially
 jobs:
-  build:
-    #runs-on: defines The workflow runner
+  black:
     runs-on: ubuntu-latest
-    #steps: defines a series of tasks executed by the Job
     steps:
     - uses: actions/checkout@v2
-    - run: | # To fetch all history for all tags and branches
-        git fetch --prune --unshallow
-
-        #Task for setting up Python using actions/setup-python@v2 Github action
-    - name: Set up Python
+    - name: set up python
       uses: actions/setup-python@v2
       with:
         python-version: "3.10"
+    - name: install dependencies
+      uses: knowsuchagency/poetry-install@v1
+      env:
+        POETRY_VIRTUALENVS_CREATE: false
+    - name: Run black checks and format
+      run: "poetry run black --checks"
 
-        #Task for installing dependencies, multi-line command
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install black pytest
-        if [ -f config/requirements/requirements.txt ]; then pip install -r config/requirements/requirements.txt; fi
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+    - name: install dependencies
+      uses: knowsuchagency/poetry-install@v1
+      env:
+        POETRY_VIRTUALENVS_CREATE: false
+    - name: check and format with flake8
+    - run: "poetry run flake8 --count"
 
-    - name: Test using pytest
-      run: |
-        # Run automated tests using pytest
-        pytest
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+    - name: install dependencies
+      uses: knowsuchagency/poetry-install@v1
+      env:
+        POETRY_VIRTUALENVS_CREATE: false
+    - name: perform static type checks with mypy
+      run: "poetry run mypy ."
+
+  pytest:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.8-bullseye
+        env:
+          POSTGRES_PASSWORD: snapshots
+          POSTGRES_USER: snapshots
+          POSTGRES_DB: snapshots
+        options: >-
+          --health-cmd="pg_isready"
+          --health-intervals=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+    - uses: actions/checkout@v2
+    - name: set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10"
+    - name: install dependencies
+      uses: knowsuchagency/poetry-install@v1
+      env:
+        POETRY_VIRTUALENVS_CREATE: false
+    - name: run all tests cases using pytest
+      run: "poetry run pytest"
       env:
         CLOUD_NAME: ${{secrets.CLOUD_NAME}}
         API_KEY: ${{secrets.API_KEY}}
         API_SECRET: ${{secrets.API_SECRET}}
         CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
+        DB_PORT: 5432
+        DB_PASSWORD: snapshots
+        DB_USER: snapshots
+        DB_HOST: localhost
+        DB_NAME: /snapshots
+        DB_DRIVERNAME: postgresql
+        DB_ECHO: true
+        DB_SCHEME: postgresql+asyncpg
