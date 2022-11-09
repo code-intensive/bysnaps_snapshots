@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     Application settings.
 
     These parameters can be configured
+
     with environment variables.
     """
 
@@ -36,7 +37,7 @@ class Settings(BaseSettings):
     load_dotenv(dotenv_path=DOT_ENV_PATH)
 
     PROJECT_DESCRIPTION = (
-        "The core snap processing service for the buysnaps microservices project"
+        "The core snap processing service for the buysnaps microservices project."
     )
 
     APP_SETTINGS = {
@@ -44,6 +45,7 @@ class Settings(BaseSettings):
         "title": "Buysnaps | Snaps [v1]",
         "debug": getenv("DEBUG", False),
         "description": PROJECT_DESCRIPTION,
+        "docs_url": API_VERSION + "/docs",
     }
 
     DATABASE_URL = "sqlite+aiosqlite:///./snap_shot.db"
@@ -67,6 +69,7 @@ class Settings(BaseSettings):
     _db_port = int(getenv("DB_PORT", 0))
     _db_user: str | None = getenv("DB_USER")
     _db_pass: str | None = getenv("DB_PASS")
+    _db_name = str(getenv("DB_NAME"))
     _db_base = str(getenv("DB_BASE"))
     db_echo = bool(getenv("DB_ECHO"))
 
@@ -100,20 +103,24 @@ class Settings(BaseSettings):
 
     CLOUDINARY_SNAP_UPLOAD_FOLDER: str = "buysnaps/snap-shots/"
 
+    ALLOWED_ORIGINS = ("http://127.0.0.1:3000",)
+
     @property
-    def db_url(self) -> URL:
+    def db_url(self) -> str:
         """
         Assemble database URL from settings.
 
         :return: database URL.
         """
-        return URL.build(
-            scheme=self._db_scheme,
-            host=self._db_host,
-            port=self._db_port,
-            user=self._db_user,
-            password=self._db_pass,
-            path=f"/{self._db_base}",
+        return str(
+            URL.build(
+                scheme=self._db_scheme,
+                host=self._db_host,
+                port=self._db_port,
+                user=self._db_user,
+                password=self._db_pass,
+                path=self._db_name,
+            ),
         )
 
     @property
