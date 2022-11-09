@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from database.managers.interfaces.snap_manager_interface import ISnapManager
@@ -38,3 +39,11 @@ class SnapService:
 
     async def get_snap(self, snap_id: str) -> Snap:
         return await self.snap_manager.fetchone(snap_id)
+
+    async def delete_snap(self, snap_id: str) -> None:
+        snap = await self.get_snap(snap_id)
+        await asyncio.gather(
+            self.snap_cloud_service.delete_snap(snap.snap_url),
+            self.snap_manager.delete(snap),
+        )
+        return None

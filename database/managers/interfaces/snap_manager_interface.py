@@ -20,6 +20,6 @@ class ISnapManager(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def delete(self, snap_id: str) -> Snap:
+    async def delete(self, snap: Snap) -> None:
         """Deletes a snap shot from the database using it's snap id"""
         ...

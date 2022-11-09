@@ -5,6 +5,7 @@ from database.utils.sql import fetch_snap_query, fetch_snaps_query
 from fastapi import HTTPException
 from models.snaps import DBSnap
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.status import HTTP_404_NOT_FOUND
 
 
 class SnapManager(ISnapManager):
@@ -22,7 +23,17 @@ class SnapManager(ISnapManager):
         snap = await self._session.execute(fetch_snap_query(snap_uuid))
         snap = snap.scalars().first()
         if snap is None:
-            raise HTTPException(404, detail="Snapshot not found")
+            detail = [
+                {
+                    "loc": [
+                        "snap_manager",
+                        "get_snap",
+                    ],
+                    "type": "snap.exceptions.not_found",
+                    "msg": "snap not found",
+                },
+            ]
+            raise HTTPException(HTTP_404_NOT_FOUND, detail=detail)
         return snap
 
     async def fetchall(self) -> list[Snap]:
@@ -30,7 +41,6 @@ class SnapManager(ISnapManager):
         snaps = await self._session.execute(fetch_snaps_query())
         return snaps.scalars().fetchall()
 
-    async def delete(self, snap_id: str) -> Snap:
+    async def delete(self, snap: Snap) -> None:
         """Deletes a snap shot from the databases using it's snap id"""
-        await self._session.delete(snap_id)
-        return await self._session.flush()
+        return await self._session.delete(snap)

@@ -1,11 +1,13 @@
 from controllers.api.snap_controllers import (
     create_snap,
+    delete_snap,
     get_snap,
     get_snaps,
     health_check,
 )
 from fastapi.routing import APIRouter
 from models.snaps import DBSnap
+from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
 snaps_router = APIRouter(prefix="/snap-shots")
 
@@ -25,7 +27,7 @@ snaps_router.add_api_route(
     path="",
     endpoint=create_snap,
     methods=["post"],
-    status_code=201,
+    status_code=HTTP_201_CREATED,
     summary="Create a new snap",
     response_description="Returns a newly created `DBSnap`",
 )
@@ -44,4 +46,12 @@ snaps_router.add_api_route(
     methods=["get"],
     response_model=DBSnap,
     summary="Retrieve a snap by it's id",
+)
+
+snaps_router.add_api_route(
+    path="/{snap_id}",
+    endpoint=delete_snap,
+    methods=["delete"],
+    status_code=HTTP_204_NO_CONTENT,
+    summary="Delete a snap by it's id",
 )
