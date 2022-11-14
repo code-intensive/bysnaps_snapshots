@@ -25,10 +25,11 @@ class Settings(BaseSettings):
     Application settings.
 
     These parameters can be configured
+
     with environment variables.
     """
 
-    API_VERSION = "/v1"
+    API_VERSION = "/api/v1"
     TEMP_DIR = Path(gettempdir())
     PROJECT_ROOT = Path(__file__).parent.parent
     DOT_ENV_PATH = PROJECT_ROOT.joinpath("config/env/development/.env")
@@ -36,7 +37,7 @@ class Settings(BaseSettings):
     load_dotenv(dotenv_path=DOT_ENV_PATH)
 
     PROJECT_DESCRIPTION = (
-        "The core snap processing service for the buysnaps microservices project"
+        "The core snap processing service for the buysnaps microservices project."
     )
 
     APP_SETTINGS = {
@@ -44,6 +45,7 @@ class Settings(BaseSettings):
         "title": "Buysnaps | Snaps [v1]",
         "debug": getenv("DEBUG", False),
         "description": PROJECT_DESCRIPTION,
+        "docs_url": API_VERSION + "/docs",
     }
 
     DATABASE_URL = "sqlite+aiosqlite:///./snap_shot.db"
@@ -62,12 +64,13 @@ class Settings(BaseSettings):
 
     # Variables for the database
 
-    db_scheme = str(getenv("DB_SCHEME"))
-    db_host = str(getenv("DB_HOST"))
-    db_port = int(getenv("DB_PORT", 0))
-    db_user: str | None = getenv("DB_USER")
-    db_pass: str | None = getenv("DB_PASS")
-    db_base = str(getenv("DB_BASE"))
+    _db_scheme = str(getenv("DB_SCHEME"))
+    _db_host = str(getenv("DB_HOST"))
+    _db_port = int(getenv("DB_PORT", 0))
+    _db_user: str | None = getenv("DB_USER")
+    _db_pass: str | None = getenv("DB_PASSWORD")
+    _db_name = str(getenv("DB_NAME"))
+    _db_base = str(getenv("DB_BASE"))
     db_echo = bool(getenv("DB_ECHO"))
 
     # Variables for Redis
@@ -100,20 +103,24 @@ class Settings(BaseSettings):
 
     CLOUDINARY_SNAP_UPLOAD_FOLDER: str = "buysnaps/snap-shots/"
 
+    ALLOWED_ORIGINS = ("http://127.0.0.1:3000",)
+
     @property
-    def db_url(self) -> URL:
+    def db_url(self) -> str:
         """
         Assemble database URL from settings.
 
         :return: database URL.
         """
-        return URL.build(
-            scheme=self.db_scheme,
-            host=self.db_host,
-            port=self.db_port,
-            user=self.db_user,
-            password=self.db_pass,
-            path=f"/{self.db_base}",
+        return str(
+            URL.build(
+                scheme=self._db_scheme,
+                host=self._db_host,
+                port=self._db_port,
+                user=self._db_user,
+                password=self._db_pass,
+                path=self._db_name,
+            ),
         )
 
     @property

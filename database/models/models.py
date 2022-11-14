@@ -1,7 +1,6 @@
+from database.config.setup import Model
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-
-from database.config.setup import Model
 from utils.id_generator import generate_uuid
 
 CASCADE = "CASCADE"
@@ -22,13 +21,17 @@ class Product(Model):
 class Snap(Model):
     __tablename__ = "snaps"
 
-    snap_url = Column(String(80))
-    created_at = Column(DateTime)
-    store_id = Column(String(50), index=True)
-    customer_id = Column(String(50), index=True)
+    last_modified = Column(DateTime)
     description = Column(String(255), index=True)
+    created_at = Column(DateTime, nullable=False)
+    snap_url = Column(String(150), nullable=False)
+    store_id = Column(String(50), index=True, nullable=False)
+    customer_id = Column(String(50), index=True, nullable=False)
     id = Column(
-        String(50), primary_key=True, index=True, default=lambda: generate_uuid("snap")
+        String(50),
+        primary_key=True,
+        index=True,
+        default=lambda: generate_uuid("snap"),
     )
     products = relationship(
         "Product",

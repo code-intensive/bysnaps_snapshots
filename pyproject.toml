@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "The snap management service for Buy Snaps Inc."
 authors = ["Tega Ukavwe"]
 readme = "README.md"
-packages = [{include = "buysnaps_snapshots"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -27,6 +26,9 @@ flake8 = "5.0.4"
 black = "22.10.0"
 alembic = "^1.8.1"
 requests = "^2.28.1"
+asyncpg = "^0.27.0"
+pytest = "^7.2.0"
+autoflake = "^1.7.7"
 
 
 [build-system]
@@ -49,7 +51,6 @@ testpaths = [
 [tool.isort]
 profile = "black"
 multi_line_output = 3
-src_paths = ["snapshots",]
 
 [tool.mypy]
 strict = true

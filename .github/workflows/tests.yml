@@ -8,38 +8,105 @@ on:
 
   pull_request:
     branches:
-    - main
+      - main
 
 #A workflow job running sequentially
 jobs:
-  build:
-    #runs-on: defines The workflow runner
+  black:
     runs-on: ubuntu-latest
-    #steps: defines a series of tasks executed by the Job
     steps:
-    - uses: actions/checkout@v2
-    - run: | # To fetch all history for all tags and branches
-        git fetch --prune --unshallow
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: Run black checks and format
+        run: "poetry run black . --check"
 
-        #Task for setting up Python using actions/setup-python@v2 Github action
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: check and format with flake8
+        run: "poetry run flake8 . --count"
 
-        #Task for installing dependencies, multi-line command
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install black pytest
-        if [ -f config/requirements/requirements.txt ]; then pip install -r config/requirements/requirements.txt; fi
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: perform static type checks with mypy
+        run: "poetry run mypy ."
 
-    - name: Test using pytest
-      run: |
-        # Run automated tests using pytest
-        pytest
-      env:
-        CLOUD_NAME: ${{secrets.CLOUD_NAME}}
-        API_KEY: ${{secrets.API_KEY}}
-        API_SECRET: ${{secrets.API_SECRET}}
-        CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
+  pytest:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.8-bullseye
+        env:
+          POSTGRES_PASSWORD: snapshots
+          POSTGRES_USER: postgres
+          POSTGRES_DB: snapshots
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        ports:
+          - 5432:5432
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: run all tests cases using pytest
+        run: "poetry run pytest"
+        env:
+          CLOUD_NAME: ${{secrets.CLOUD_NAME}}
+          API_KEY: ${{secrets.API_KEY}}
+          API_SECRET: ${{secrets.API_SECRET}}
+          CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
+          DB_PORT: 5432
+          DB_PASSWORD: snapshots
+          DB_USER: postgres
+          DB_HOST: localhost
+          DB_NAME: /snapshots
+          DB_DRIVERNAME: postgresql
+          DB_ECHO: true
+          DB_SCHEME: postgresql+asyncpg
