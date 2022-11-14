@@ -68,7 +68,7 @@ class Settings(BaseSettings):
     _db_host = str(getenv("DB_HOST"))
     _db_port = int(getenv("DB_PORT", 0))
     _db_user: str | None = getenv("DB_USER")
-    _db_pass: str | None = getenv("DB_PASS")
+    _db_pass: str | None = getenv("DB_PASSWORD")
     _db_name = str(getenv("DB_NAME"))
     _db_base = str(getenv("DB_BASE"))
     db_echo = bool(getenv("DB_ECHO"))

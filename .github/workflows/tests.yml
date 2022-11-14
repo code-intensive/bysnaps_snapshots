@@ -72,7 +72,7 @@ jobs:
       postgres:
         image: postgres:13.8-bullseye
         env:
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: snapshots
           POSTGRES_USER: postgres
           POSTGRES_DB: snapshots
         options: >-
@@ -103,7 +103,7 @@ jobs:
           API_SECRET: ${{secrets.API_SECRET}}
           CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
           DB_PORT: 5432
-          DB_PASSWORD: postgres
+          DB_PASSWORD: snapshots
           DB_USER: postgres
           DB_HOST: localhost
           DB_NAME: /snapshots
