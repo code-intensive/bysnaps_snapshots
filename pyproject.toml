@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "The snap management service for Buy Snaps Inc."
 authors = ["Tega Ukavwe"]
 readme = "README.md"
-packages = [{include = "buysnaps_snapshots"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -52,7 +51,6 @@ testpaths = [
 [tool.isort]
 profile = "black"
 multi_line_output = 3
-src_paths = ["snapshots",]
 
 [tool.mypy]
 strict = true
