@@ -1,8 +1,7 @@
 import cv2
-from PIL.Image import Image
-
 from models.snap_datas import SnapData
 from modules.decoders.interfaces.snap_decoder_interface import ISnapDecoder
+from PIL.Image import Image
 
 
 class CV2SnapDecoder(ISnapDecoder):

@@ -8,54 +8,57 @@ on:
 
   pull_request:
     branches:
-    - main
+      - main
 
 #A workflow job running sequentially
 jobs:
   black:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: install dependencies
-      uses: knowsuchagency/poetry-install@v1
-      env:
-        POETRY_VIRTUALENVS_CREATE: false
-    - name: Run black checks and format
-      run: "poetry run black --checks"
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        uses: knowsuchagency/poetry-install@v1
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: Run black checks and format
+        run: "poetry run black --checks"
 
   flake8:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: install dependencies
-      uses: knowsuchagency/poetry-install@v1
-      env:
-        POETRY_VIRTUALENVS_CREATE: false
-    - name: check and format with flake8
-    - run: "poetry run flake8 --count"
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        uses: knowsuchagency/poetry-install@v1
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: check and format with flake8
+        run: "poetry run flake8 --count"
 
   mypy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: install dependencies
-      uses: knowsuchagency/poetry-install@v1
-      env:
-        POETRY_VIRTUALENVS_CREATE: false
-    - name: perform static type checks with mypy
-      run: "poetry run mypy ."
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        uses: knowsuchagency/poetry-install@v1
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: perform static type checks with mypy
+        run: "poetry run mypy ."
 
   pytest:
     runs-on: ubuntu-latest
@@ -72,27 +75,28 @@ jobs:
           --health-timeout=5s
           --health-retries=5
     steps:
-    - uses: actions/checkout@v2
-    - name: set up python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: install dependencies
-      uses: knowsuchagency/poetry-install@v1
-      env:
-        POETRY_VIRTUALENVS_CREATE: false
-    - name: run all tests cases using pytest
-      run: "poetry run pytest"
-      env:
-        CLOUD_NAME: ${{secrets.CLOUD_NAME}}
-        API_KEY: ${{secrets.API_KEY}}
-        API_SECRET: ${{secrets.API_SECRET}}
-        CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
-        DB_PORT: 5432
-        DB_PASSWORD: snapshots
-        DB_USER: snapshots
-        DB_HOST: localhost
-        DB_NAME: /snapshots
-        DB_DRIVERNAME: postgresql
-        DB_ECHO: true
-        DB_SCHEME: postgresql+asyncpg
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        uses: knowsuchagency/poetry-install@v1
+        env:
+          POETRY_VIRTUALENVS_CREATE: false
+      - name: run all tests cases using pytest
+        run: "poetry run pytest"
+        env:
+          CLOUD_NAME: ${{secrets.CLOUD_NAME}}
+          API_KEY: ${{secrets.API_KEY}}
+          API_SECRET: ${{secrets.API_SECRET}}
+          CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
+          DB_PORT: 5432
+          DB_PASSWORD: snapshots
+          DB_USER: snapshots
+          DB_HOST: localhost
+          DB_NAME: /snapshots
+          DB_DRIVERNAME: postgresql
+          DB_ECHO: true
+          DB_SCHEME: postgresql+asyncpg

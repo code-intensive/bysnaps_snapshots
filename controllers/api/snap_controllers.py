@@ -1,6 +1,6 @@
 from database.utils.dependencies import get_snap_service
 from fastapi import Depends
-from models.snaps import DBSnap, Snap
+from models.snaps import SnapCreate, SnapInDB
 from services.interfaces.interface import ISnapService
 
 
@@ -10,13 +10,14 @@ def health_check() -> None:
 
 
 async def create_snap(
-    snap: Snap,
+    snap: SnapCreate,
     snap_service: ISnapService = Depends(get_snap_service),
-) -> DBSnap:
+) -> SnapInDB:
     """
-    Creates a new Snapshot from the provided Snap.
+    Creates a new Snapshot from the provided SnapCreate.
 
-    :param snap: A dictionary mapping with the structure of the Pydantic Snap model.
+    :param snap: A dictionary mapping with
+    the structure of the Pydantic SnapCreate model.
 
     :param snap_service: A SnapService instance to be injected for creation.
 
@@ -29,9 +30,10 @@ async def create_snap(
 async def get_snap(
     snap_id: str,
     snap_service: ISnapService = Depends(get_snap_service),
-) -> DBSnap:
+) -> SnapInDB:
     """
-    Retrieves a Snapshot from the database, raises a 404 if the Snap does not exist.
+    Retrieves a Snapshot from the database,
+    raises a 404 if the SnapCreate does not exist.
 
     :param snap_id: id of the snap to be retrieved.
 
@@ -46,9 +48,10 @@ async def get_snap(
 
 async def get_snaps(
     snap_service: ISnapService = Depends(get_snap_service),
-) -> list[DBSnap]:
+) -> list[SnapInDB]:
     """
-    Retrieves a Snapshot from the database, raises a 404 if the Snap does not exist.
+    Retrieves a Snapshot from the database,
+    raises a 404 if the SnapCreate does not exist.
 
     :param snap_service: A SnapService instance to be injected for snaps retrieval.
 
@@ -64,7 +67,7 @@ async def delete_snap(
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> None:
     """
-    Deletes a Snapshot from the database, raises a 404 if the Snap does not exist.
+    Deletes a Snapshot from the database, raises a 404 if the SnapCreate does not exist.
 
     :param snap_id: id of the snap to be deleted.
 

@@ -4,7 +4,7 @@ from models.products import Product
 from pydantic import BaseModel, Field
 
 
-class Snap(BaseModel):
+class SnapCreate(BaseModel):
     """
     A Snap holds required data for QRCode creation, used for post
     """
@@ -14,7 +14,7 @@ class Snap(BaseModel):
     )
     description: str | None = Field(
         description="Optional purchase description",
-        max_length=150,
+        max_length=255,
     )
     customer_id: str = Field(
         title="Customer",
@@ -26,14 +26,27 @@ class Snap(BaseModel):
     )
 
 
-class DBSnap(Snap):
+class SnapUpdate(SnapCreate):
     """
-    An existing snap from the database containing id, snap_url and created_at
+    An snap containing id to be updated
+    """
+
+    id: str
+
+
+class SnapInDB(SnapCreate):
+    """
+    An existing snap matching the database schema,
+    containing id, snap_url and created_at
     """
 
     id: str
     snap_url: str = Field(description="The public url to a cloudinary image")
     created_at: datetime = Field(
+        title="Time of creation",
+        description="The date and time the snap was created",
+    )
+    last_modified: datetime | None = Field(
         title="Time of creation",
         description="The date and time the snap was created",
     )

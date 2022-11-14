@@ -21,11 +21,12 @@ class Product(Model):
 class Snap(Model):
     __tablename__ = "snaps"
 
-    snap_url = Column(String(100))
-    created_at = Column(DateTime)
-    store_id = Column(String(50), index=True)
-    customer_id = Column(String(50), index=True)
+    last_modified = Column(DateTime)
     description = Column(String(255), index=True)
+    created_at = Column(DateTime, nullable=False)
+    snap_url = Column(String(150), nullable=False)
+    store_id = Column(String(50), index=True, nullable=False)
+    customer_id = Column(String(50), index=True, nullable=False)
     id = Column(
         String(50),
         primary_key=True,
