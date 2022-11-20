@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from models.products import Product
 from pydantic import BaseModel, Field
+
+from models.snap_item import SnapItem
 
 
 class SnapCreate(BaseModel):
@@ -9,8 +10,8 @@ class SnapCreate(BaseModel):
     A Snap holds required data for QRCode creation, used for post
     """
 
-    products: list[Product] = Field(
-        description="list of products selected by the user via this snap",
+    snap_items: list[SnapItem] = Field(
+        description="list of snap_item selected by the user via this snap",
     )
     description: str | None = Field(
         description="Optional purchase description",

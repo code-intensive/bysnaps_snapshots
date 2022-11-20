@@ -96,12 +96,12 @@ class Settings(BaseSettings):
     prometheus_dir: Path = TEMP_DIR / "prom"
 
     CLOUDINARY_SETTINGS = {
-        "api_key": getenv("API_KEY"),
+        "api_key": getenv("CLOUD_API_KEY"),
         "cloud_name": getenv("CLOUD_NAME"),
-        "api_secret": getenv("API_SECRET"),
+        "api_secret": getenv("CLOUD_API_SECRET"),
     }
 
-    CLOUDINARY_SNAP_UPLOAD_FOLDER: str = "buysnaps/snap-shots/"
+    CLOUD_SNAP_UPLOAD_FOLDER: str = "buysnaps/snap-shots/"
 
     ALLOWED_ORIGINS = ("http://127.0.0.1:3000",)
 

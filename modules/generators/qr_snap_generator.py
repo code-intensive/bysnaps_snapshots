@@ -1,7 +1,8 @@
 from io import BytesIO
 
-from modules.generators.interfaces.snap_generator_interface import ISnapGenerator
 from qrcode import make
+
+from modules.generators.interfaces.snap_generator_interface import ISnapGenerator
 
 
 class QRCodeSnapGenerator(ISnapGenerator):

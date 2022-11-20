@@ -1,11 +1,12 @@
+from fastapi import HTTPException
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.status import HTTP_404_NOT_FOUND
+
 from database.managers.interfaces.snap_manager_interface import ISnapManager
 from database.models.models import Snap
 from database.utils.model_converter import snap_from_pydantic
 from database.utils.prebuilt_queries import fetch_snap_query, fetch_snaps_query
-from fastapi import HTTPException
 from models.snaps import SnapInDB
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.status import HTTP_404_NOT_FOUND
 
 
 class SnapManager(ISnapManager):
@@ -23,17 +24,7 @@ class SnapManager(ISnapManager):
         snap = await self._session.execute(fetch_snap_query(snap_uuid))
         snap = snap.scalars().first()
         if snap is None:
-            detail = [
-                {
-                    "loc": [
-                        "snap_manager",
-                        "get_snap",
-                    ],
-                    "type": "snap.exceptions.not_found",
-                    "msg": "snap not found",
-                },
-            ]
-            raise HTTPException(HTTP_404_NOT_FOUND, detail=detail)
+            raise HTTPException(HTTP_404_NOT_FOUND, detail="snap not found")
         return snap
 
     async def fetchall(self) -> list[Snap]:

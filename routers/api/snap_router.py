@@ -1,3 +1,6 @@
+from fastapi.routing import APIRouter
+from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
+
 from controllers.api.snap_controllers import (
     create_snap,
     delete_snap,
@@ -5,9 +8,7 @@ from controllers.api.snap_controllers import (
     get_snaps,
     health_check,
 )
-from fastapi.routing import APIRouter
 from models.snaps import SnapInDB
-from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
 snaps_router = APIRouter(prefix="/snap-shots")
 

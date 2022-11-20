@@ -1,6 +1,7 @@
+from fastapi import FastAPI
+
 from config.settings import settings
 from database.config.setup import set_up_database
-from fastapi import FastAPI
 from middlewares.cors_middleware import CORS_MIDDLEWARE_CONFIG
 from routers.api.snap_router import snaps_router
 

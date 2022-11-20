@@ -1,9 +1,9 @@
-from database.models.models import Product, Snap
+from database.models.models import Snap, SnapItem
 from models.snaps import SnapInDB
 
 
 async def snap_from_pydantic(orm_snap: SnapInDB) -> Snap:
     snap_data = orm_snap.dict()
-    products_data = snap_data.pop("products")
-    products = [Product(**product) for product in products_data]
-    return Snap(products=products, **snap_data)
+    snap_items_data = snap_data.pop("snap_items")
+    snap_items = [SnapItem(**snap_item) for snap_item in snap_items_data]
+    return Snap(snap_items=snap_items, **snap_data)

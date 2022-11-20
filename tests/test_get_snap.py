@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
+
 from utils.id_generator import generate_uuid
 
 
@@ -9,10 +10,10 @@ def test_snap_exists(client: TestClient, fast_api_app: FastAPI) -> None:
         "store_id": generate_uuid("store"),
         "customer_id": generate_uuid("customer"),
         "description": "A fake description for a fake snap purchase",
-        "products": [
-            {"product_id": generate_uuid("product"), "quantity": 10},
-            {"product_id": generate_uuid("product"), "quantity": 14},
-            {"product_id": generate_uuid("product"), "quantity": 31},
+        "snap_items": [
+            {"item_id": generate_uuid("snap_item"), "quantity": 10},
+            {"item_id": generate_uuid("snap_item"), "quantity": 14},
+            {"item_id": generate_uuid("snap_item"), "quantity": 31},
         ],
     }
 
@@ -46,4 +47,4 @@ def test_snap_does_not_exist(client: TestClient, fast_api_app: FastAPI) -> None:
 
     assert response.status_code == HTTP_404_NOT_FOUND
     assert "id" not in response.json()
-    assert response.json()["detail"][0]["msg"] == "snap not found"
+    assert response.json()["detail"] == "snap not found"

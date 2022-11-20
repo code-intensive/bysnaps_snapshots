@@ -1,5 +1,6 @@
-from config.settings import settings
 from fastapi.middleware.cors import CORSMiddleware
+
+from config.settings import settings
 
 CORS_MIDDLEWARE_CONFIG = {
     "allow_methods": ["*"],

@@ -101,7 +101,7 @@ jobs:
           CLOUD_NAME: ${{secrets.CLOUD_NAME}}
           API_KEY: ${{secrets.API_KEY}}
           API_SECRET: ${{secrets.API_SECRET}}
-          CLOUDINARY_URL: ${{secrets.CLOUDINARY_URL}}
+          CLOUD_URL: ${{secrets.CLOUDINARY_URL}}
           DB_PORT: 5432
           DB_PASSWORD: snapshots
           DB_USER: postgres

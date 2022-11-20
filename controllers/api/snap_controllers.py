@@ -1,6 +1,7 @@
-from database.utils.dependencies import get_snap_service
 from fastapi import Depends
+
 from models.snaps import SnapCreate, SnapInDB
+from services.dependencies import get_snap_service
 from services.interfaces.interface import ISnapService
 
 
@@ -42,8 +43,7 @@ async def get_snap(
     :return: An existing snap, if the snap exists.
 
     """
-    snap = await snap_service.get_snap(snap_id)
-    return snap.__dict__
+    return await snap_service.get_snap(snap_id)
 
 
 async def get_snaps(
@@ -58,8 +58,7 @@ async def get_snaps(
     :return: A list of existing snaps, if snaps exist.
 
     """
-    snaps = await snap_service.get_snaps()
-    return [snap.__dict__ for snap in snaps]
+    return await snap_service.get_snaps()
 
 
 async def delete_snap(
