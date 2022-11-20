@@ -99,9 +99,9 @@ jobs:
         run: "poetry run pytest"
         env:
           CLOUD_NAME: ${{secrets.CLOUD_NAME}}
-          API_KEY: ${{secrets.API_KEY}}
-          API_SECRET: ${{secrets.API_SECRET}}
-          CLOUD_URL: ${{secrets.CLOUDINARY_URL}}
+          CLOUD_API_KEY: ${{secrets.API_KEY}}
+          CLOUD_API_SECRET: ${{secrets.API_SECRET}}
+          CLOUD_URL: ${{secrets.CLOUD_URL}}
           DB_PORT: 5432
           DB_PASSWORD: snapshots
           DB_USER: postgres
