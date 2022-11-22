@@ -1,11 +1,13 @@
 def public_id_from_snap_url(snap_url: str, prefix: str = "buysnaps/snap-shots") -> str:
-    """
-    Parses a cloudinary public id from the public url
+    """Parses a cloudinary public id from the public url.
 
-    :param snap_url: The snap_url from which to retrieve the public_id
+    :param snap_url: The snap_url from which to retrieve the public_id.
 
-    :return: string of the corresponding public_id
+    :param prefix: An optional prefix to be prepended to the snap_url.
 
+    :return: Snap public URL.
+
+    :rtype: str.
     """
     # The cloudinary image below is a perfect
     # example of what we intend to parse as the
@@ -13,8 +15,7 @@ def public_id_from_snap_url(snap_url: str, prefix: str = "buysnaps/snap-shots") 
     # to retrieve without the extension,
     # that is the public_id of the particular resource
 
-    # http://res.cloudinary.com/djciset6u/image/upload/v1667867432/
-    # buysnaps/snap-shots/w9kjdjuknebppord0nm1.png
+    # http://res.cloudinary.com/djciset6u/image/upload/v1667867432/buysnaps/snap-shots/w9kjdjuknebppord0nm1.png # noqa
 
     cloudinary_resource = snap_url.split("/")[-1]  # w9kjdjuknebppord0nm1.png
 

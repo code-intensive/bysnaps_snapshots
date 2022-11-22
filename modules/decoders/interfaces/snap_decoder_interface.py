@@ -1,11 +1,19 @@
 from abc import ABCMeta, abstractmethod
 
-from models.snap_datas import SnapData
+from PIL import Image
 
 
 class ISnapDecoder(metaclass=ABCMeta):
-    @classmethod
+    """Snap decoder interface."""
+
+    @staticmethod
     @abstractmethod
-    def decode_snap(self) -> SnapData:
-        """Decodes snaps based on the snap passed to the instance"""
-        ...
+    def decode_snap(barcode_image: Image) -> str:
+        """Decodes a barcode.
+
+        :param barcode_image: the image to be decoded.
+
+        :return: The public url to the snapshot.
+
+        :rtype: str.
+        """

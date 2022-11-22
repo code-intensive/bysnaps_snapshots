@@ -12,6 +12,8 @@ from models.snaps import SnapInDB, SnapUpdate
 
 
 class SnapManager(ISnapManager):
+    """SnapManager for database related actions"""
+
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
@@ -21,21 +23,18 @@ class SnapManager(ISnapManager):
         await self._session.flush()
         return orm_snap
 
-    async def fetchone(self, snap_uuid: str) -> Snap:
-        """Retrieves all snap shots from the database"""
-        snap = await self._session.execute(fetch_snap_query(snap_uuid))
+    async def fetchone(self, snap_id: str) -> Snap:
+        snap = await self._session.execute(fetch_snap_query(snap_id))
         snap = snap.scalars().first()
         if snap is None:
             raise HTTPException(HTTP_404_NOT_FOUND, detail="snap not found")
         return snap
 
     async def fetchall(self) -> list[Snap]:
-        """Retrieves all snap shots from the database"""
         snaps = await self._session.execute(fetch_snaps_query())
         return snaps.scalars().fetchall()
 
     async def update(self, snap_update: SnapUpdate) -> None:
-        """Update a snap shot int the databases"""
         snap = await self.fetchone(snap_update.id)
         snap.snap_items = [
             SnapItem(**snap_item.dict()) for snap_item in snap_update.snap_items
@@ -45,8 +44,6 @@ class SnapManager(ISnapManager):
         snap.last_modified = datetime.now()
         self._session.add(snap)
         await self._session.flush()
-        return
 
     async def delete(self, snap: Snap) -> None:
-        """Deletes a snap shot from the databases using it's snap id"""
         return await self._session.delete(snap)

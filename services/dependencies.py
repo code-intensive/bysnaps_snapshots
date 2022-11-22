@@ -6,11 +6,14 @@ from services.snaps_service import SnapService
 
 
 async def get_snap_service() -> SnapService:
+    """Function for providing SnapService to controllers via dependency injection.
+
+    :yields SnapService: SnapService instance.
+    """
     async with async_session() as session:
         async with session.begin():
-            snap_manager = SnapManager(session)
             yield SnapService(
-                snap_manager,
+                SnapManager(session),
                 QRCodeSnapGenerator(),
                 CloudinarySnapService(),
             )

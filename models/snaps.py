@@ -6,9 +6,7 @@ from models.snap_item import SnapItem
 
 
 class SnapBase(BaseModel):
-    """
-    A Snap holds required data for QRCode creation, used for post
-    """
+    """Base class for Snap pydantic models."""
 
     snap_items: list[SnapItem] = Field(
         description="list of snap_item selected by the user via this snap",
@@ -20,9 +18,7 @@ class SnapBase(BaseModel):
 
 
 class SnapCreate(SnapBase):
-    """
-    A Snap holds required data for QRCode creation, used for post
-    """
+    """A Snap holds required data for QRCode creation, used for post."""
 
     customer_id: str = Field(
         title="Customer",
@@ -35,17 +31,14 @@ class SnapCreate(SnapBase):
 
 
 class SnapUpdate(SnapBase):
-    """
-    An snap containing id, snap_items and description to be updated
-    """
+    """An snap containing id, snap_items and description to be updated."""
 
     id: str
 
 
 class SnapInDB(SnapCreate):
-    """
-    An existing snap matching the database schema,
-    containing id, snap_url and created_at
+    """An existing snap matching the database schema,
+    containing id, snap_url and created_at.
     """
 
     id: str

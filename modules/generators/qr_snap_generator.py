@@ -6,6 +6,8 @@ from modules.generators.interfaces.snap_generator_interface import ISnapGenerato
 
 
 class QRCodeSnapGenerator(ISnapGenerator):
+    """QRcode generator for creating snapshots."""
+
     @staticmethod
     def generate_snap(snap_id: str, **options: dict[str, str | int]) -> bytes:
         temp_file = BytesIO()

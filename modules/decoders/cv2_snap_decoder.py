@@ -1,14 +1,18 @@
+from abc import abstractmethod
+
 import cv2
 from PIL.Image import Image
 
-from models.snap_datas import SnapData
 from modules.decoders.interfaces.snap_decoder_interface import ISnapDecoder
 
 
 class CV2SnapDecoder(ISnapDecoder):
-    @classmethod
-    def decode_snap(cls, barcode_image: Image) -> SnapData:
+    """CV2 implementation of the SnapDecoder interface."""
+
+    @staticmethod
+    @abstractmethod
+    def decode_snap(barcode_image: Image) -> str:
         img = cv2.imread(barcode_image)
         decoder = cv2.QRCodeDetector()
-        snap_data, _, _ = decoder.detectAndDecode(img)
-        return snap_data
+        public_url, *_ = decoder.detectAndDecode(img)
+        return public_url

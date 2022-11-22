@@ -8,6 +8,8 @@ CASCADE = "CASCADE"
 
 
 class SnapItem(Model):
+    """SQLAlchemy ORM for snap_items."""
+
     __tablename__ = "snap_items"
 
     id = Column(
@@ -24,6 +26,8 @@ class SnapItem(Model):
 
 
 class Snap(Model):
+    """SQLAlchemy ORM for snap."""
+
     __tablename__ = "snaps"
 
     last_modified = Column(DateTime)

@@ -2,6 +2,8 @@ from pydantic import BaseModel, Field
 
 
 class SnapItem(BaseModel):
+    """Pydantic model for snap_items."""
+
     item_id: str = Field(
         title="Product",
         description="Universally unique identifier of the snap item",

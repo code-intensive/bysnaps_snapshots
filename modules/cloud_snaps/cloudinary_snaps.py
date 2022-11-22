@@ -4,11 +4,14 @@ from fastapi import HTTPException
 from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 
 from config.settings import settings
+from database.models.models import Snap
 from modules.cloud_snaps.interfaces.cloud_snap_interface import ICloudSnapService
 from utils.parsers import public_id_from_snap_url
 
 
 class CloudinarySnapService(ICloudSnapService):
+    """Cloudinary service for snapshot cloud storage management."""
+
     @staticmethod
     async def upload_snap(snap: bytes) -> CloudinaryImage:
         try:
@@ -22,10 +25,10 @@ class CloudinarySnapService(ICloudSnapService):
             return cloudinary_snap
 
     @staticmethod
-    async def delete_snap(snap_url: str) -> None:
+    async def delete_snap(snap: Snap) -> None:
         try:
             uploader.destroy(
-                public_id_from_snap_url(snap_url),
+                public_id_from_snap_url(snap.snap_url),
             )
         except CloudinaryConnectionError as E:
             raise HTTPException(HTTP_503_SERVICE_UNAVAILABLE, detail=str(E))

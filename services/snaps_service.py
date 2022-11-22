@@ -6,17 +6,19 @@ from database.models.models import Snap
 from models.snaps import SnapCreate, SnapInDB, SnapUpdate
 from modules.cloud_snaps.interfaces.cloud_snap_interface import ICloudSnapService
 from modules.generators.interfaces.snap_generator_interface import ISnapGenerator
+from services.interfaces.interface import ISnapService
 from utils.id_generator import generate_uuid
 
 
-class SnapService:
+class SnapService(ISnapService):
+    """SnapService class."""
+
     def __init__(
         self,
         snap_manager: ISnapManager,
         snap_generator: ISnapGenerator,
         snap_cloud_service: ICloudSnapService,
     ) -> None:
-
         self.snap_manager = snap_manager
         self.snap_generator = snap_generator
         self.snap_cloud_service = snap_cloud_service
@@ -37,11 +39,19 @@ class SnapService:
     async def delete_snap(self, snap_id: str) -> None:
         snap = await self.get_snap(snap_id)
         await asyncio.gather(
-            self.snap_cloud_service.delete_snap(snap.snap_url),
+            self.snap_cloud_service.delete_snap(snap),
             self.snap_manager.delete(snap),
         )
 
     async def _build_snap(self, snap_create: SnapCreate) -> SnapInDB:
+        """Private method for snap building.
+
+        :param snap_create: A pydantic model for request validation.
+
+        :return: A pydantic model mapping to an SQLAlchemy Snap model.
+
+        :rtype: SnapInDB.
+        """
         snap_id = generate_uuid("snap")
         snap_bytes = self.snap_generator.generate_snap(snap_id)
         cloudinary_snap = await self.snap_cloud_service.upload_snap(snap_bytes)

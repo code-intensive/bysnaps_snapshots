@@ -13,6 +13,7 @@ Model = declarative_base()
 
 
 async def set_up_database() -> None:
+    """function to be called for application setup with database."""
     async with async_engine.begin() as conn:
         # await conn.run_sync(Model.metadata.drop_all)
         await conn.run_sync(Model.metadata.create_all)

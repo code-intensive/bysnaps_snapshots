@@ -12,4 +12,5 @@ app.include_router(snaps_router, prefix=settings.API_VERSION)
 
 @app.on_event("startup")
 async def startup() -> None:
+    """Sets up needed config on startup event."""
     await set_up_database()
