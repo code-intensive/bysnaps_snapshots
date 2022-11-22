@@ -3,7 +3,7 @@ from datetime import datetime
 
 from database.managers.interfaces.snap_manager_interface import ISnapManager
 from database.models.models import Snap
-from models.snaps import SnapCreate, SnapInDB
+from models.snaps import SnapCreate, SnapInDB, SnapUpdate
 from modules.cloud_snaps.interfaces.cloud_snap_interface import ICloudSnapService
 from modules.generators.interfaces.snap_generator_interface import ISnapGenerator
 from utils.id_generator import generate_uuid
@@ -31,13 +31,15 @@ class SnapService:
     async def get_snap(self, snap_id: str) -> Snap:
         return await self.snap_manager.fetchone(snap_id)
 
+    async def update_snap(self, snap_update: SnapUpdate) -> None:
+        return await self.snap_manager.update(snap_update)
+
     async def delete_snap(self, snap_id: str) -> None:
         snap = await self.get_snap(snap_id)
         await asyncio.gather(
             self.snap_cloud_service.delete_snap(snap.snap_url),
             self.snap_manager.delete(snap),
         )
-        return None
 
     async def _build_snap(self, snap_create: SnapCreate) -> SnapInDB:
         snap_id = generate_uuid("snap")

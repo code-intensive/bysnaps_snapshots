@@ -20,7 +20,7 @@ repos:
   hooks:
   - id: black
     name: Format with Black
-    entry: poetry run black
+    entry: poetry run black .
     language: system
     types: [python]
 
@@ -55,7 +55,7 @@ repos:
 
   - id: pytest-check
     name: pytest-check
-    entry: pytest
+    entry: poetry run pytest .
     language: system
     pass_filenames: false
     always_run: true

@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from models.snaps import SnapInDB
+from models.snaps import SnapInDB, SnapUpdate
 
 
 class ISnapManager(metaclass=ABCMeta):
@@ -17,6 +17,11 @@ class ISnapManager(metaclass=ABCMeta):
     @abstractmethod
     async def fetchall(self) -> list[SnapInDB]:
         """Retrieves all snap shots from the database"""
+        ...
+
+    @abstractmethod
+    async def update(self, snap_update: SnapUpdate) -> None:
+        """Updates a snap shot in the database"""
         ...
 
     @abstractmethod

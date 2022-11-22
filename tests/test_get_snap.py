@@ -1,27 +1,16 @@
+from typing import Any
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
-from starlette.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_404_NOT_FOUND
-
-from utils.id_generator import generate_uuid
+from starlette.status import HTTP_200_OK, HTTP_404_NOT_FOUND
 
 
-def test_snap_exists(client: TestClient, fast_api_app: FastAPI) -> None:
-    data = {
-        "store_id": generate_uuid("store"),
-        "customer_id": generate_uuid("customer"),
-        "description": "A fake description for a fake snap purchase",
-        "snap_items": [
-            {"item_id": generate_uuid("snap_item"), "quantity": 10},
-            {"item_id": generate_uuid("snap_item"), "quantity": 14},
-            {"item_id": generate_uuid("snap_item"), "quantity": 31},
-        ],
-    }
-
-    create_snap_endpoint = fast_api_app.url_path_for("create_snap")
-    create_snap_response = client.post(create_snap_endpoint, json=data)
-    assert create_snap_response.status_code == HTTP_201_CREATED
-
-    created_snap = create_snap_response.json()
+def test_snap_exists(
+    client: TestClient,
+    fast_api_app: FastAPI,
+    create_snap_fixture: Any,
+) -> None:
+    created_snap = create_snap_fixture()
 
     get_snap_endpoint = fast_api_app.url_path_for(
         "get_snap",

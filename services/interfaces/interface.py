@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 from database.models.models import Snap
-from models.snaps import SnapCreate
+from models.snaps import SnapCreate, SnapUpdate
 
 
 class ISnapService(ABCMeta):
@@ -15,6 +15,10 @@ class ISnapService(ABCMeta):
 
     @abstractmethod
     async def get_snap(self, snap_id: str) -> Snap:
+        ...
+
+    @abstractmethod
+    async def update_snap(self, snap_update: SnapUpdate) -> None:
         ...
 
     @abstractmethod

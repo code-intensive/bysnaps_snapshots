@@ -7,6 +7,7 @@ from controllers.api.snap_controllers import (
     get_snap,
     get_snaps,
     health_check,
+    update_snap,
 )
 from models.snaps import SnapInDB
 
@@ -47,6 +48,14 @@ snaps_router.add_api_route(
     methods=["get"],
     response_model=SnapInDB,
     summary="Retrieve a snap by it's id",
+)
+
+snaps_router.add_api_route(
+    path="",
+    endpoint=update_snap,
+    methods=["patch"],
+    status_code=HTTP_204_NO_CONTENT,
+    summary="Update a snap by it's id",
 )
 
 snaps_router.add_api_route(

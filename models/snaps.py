@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from models.snap_item import SnapItem
 
 
-class SnapCreate(BaseModel):
+class SnapBase(BaseModel):
     """
     A Snap holds required data for QRCode creation, used for post
     """
@@ -17,6 +17,13 @@ class SnapCreate(BaseModel):
         description="Optional purchase description",
         max_length=255,
     )
+
+
+class SnapCreate(SnapBase):
+    """
+    A Snap holds required data for QRCode creation, used for post
+    """
+
     customer_id: str = Field(
         title="Customer",
         description="The Universally unique identifier of the user",
@@ -27,9 +34,9 @@ class SnapCreate(BaseModel):
     )
 
 
-class SnapUpdate(SnapCreate):
+class SnapUpdate(SnapBase):
     """
-    An snap containing id to be updated
+    An snap containing id, snap_items and description to be updated
     """
 
     id: str

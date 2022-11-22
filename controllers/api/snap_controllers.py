@@ -1,13 +1,12 @@
 from fastapi import Depends
 
-from models.snaps import SnapCreate, SnapInDB
+from models.snaps import SnapCreate, SnapInDB, SnapUpdate
 from services.dependencies import get_snap_service
 from services.interfaces.interface import ISnapService
 
 
 def health_check() -> None:
     """Health check for the Snaps microservice."""
-    return None
 
 
 async def create_snap(
@@ -34,7 +33,7 @@ async def get_snap(
 ) -> SnapInDB:
     """
     Retrieves a Snapshot from the database,
-    raises a 404 if the SnapCreate does not exist.
+    raises a 404 if the snap does not exist.
 
     :param snap_id: id of the snap to be retrieved.
 
@@ -50,8 +49,7 @@ async def get_snaps(
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> list[SnapInDB]:
     """
-    Retrieves a Snapshot from the database,
-    raises a 404 if the SnapCreate does not exist.
+    Retrieves Snapshots from the database.
 
     :param snap_service: A SnapService instance to be injected for snaps retrieval.
 
@@ -61,18 +59,36 @@ async def get_snaps(
     return await snap_service.get_snaps()
 
 
+async def update_snap(
+    snap_update: SnapUpdate,
+    snap_service: ISnapService = Depends(get_snap_service),
+) -> None:
+    """
+    Updates an existing Snapshot at the database level,
+
+    raises a 404 if the snap does not exist.
+
+    :param snap_update: A dictionary mapping to the pydantic SnapUpdate model.
+
+    :param snap_service: A SnapService instance to be injected to update snap.
+
+    :return: None, no content
+    """
+    return await snap_service.update_snap(snap_update)
+
+
 async def delete_snap(
     snap_id: str,
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> None:
     """
-    Deletes a Snapshot from the database, raises a 404 if the SnapCreate does not exist.
+    Deletes a Snapshot from the database, raises a 404 if the snap does not exist.
 
     :param snap_id: id of the snap to be deleted.
 
-    :param snap_service: A SnapService instance to be injected for snap retrieval.
+    :param snap_service: A SnapService instance to be injected for snap deletion.
 
-    :return: None no content
+    :return: None, no content
 
     """
     return await snap_service.delete_snap(snap_id)
