@@ -27,7 +27,7 @@ class Snap(Model):
     __tablename__ = "snaps"
 
     last_modified = Column(DateTime)
-    description = Column(String(255), index=True)
+    description = Column(String(255))
     created_at = Column(DateTime, nullable=False)
     snap_url = Column(String(150), nullable=False)
     store_id = Column(String(50), index=True, nullable=False)
@@ -42,6 +42,7 @@ class Snap(Model):
         "SnapItem",
         back_populates="snap",
         cascade="all, delete-orphan",
+        single_parent=True,
     )
 
     __mapper_args__ = {"eager_defaults": True}

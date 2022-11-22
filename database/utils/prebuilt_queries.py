@@ -1,4 +1,4 @@
-from sqlalchemy.future import select
+from sqlalchemy import select
 from sqlalchemy.orm import Query, load_only, selectinload
 
 from database.models.models import Snap, SnapItem
