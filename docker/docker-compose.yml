@@ -1,0 +1,88 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./deploy/Dockerfile
+    image: snapshots:${SNAPSHOTS_VERSION:-latest}
+    restart: always
+    env_file:
+    - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rmq:
+        condition: service_healthy
+    environment:
+      SNAPSHOTS_HOST: 0.0.0.0
+      SNAPSHOTS_DB_HOST: snapshots-db
+      SNAPSHOTS_DB_PORT: 5432
+      SNAPSHOTS_DB_USER: snapshots
+      SNAPSHOTS_DB_PASS: snapshots
+      SNAPSHOTS_DB_BASE: snapshots
+      SNAPSHOTS_RABBIT_HOST: snapshots-rmq
+
+  db:
+    image: postgres:13.8-bullseye
+    hostname: snapshots-db
+    environment:
+      POSTGRES_PASSWORD: "snapshots"
+      POSTGRES_USER: "snapshots"
+      POSTGRES_DB: "snapshots"
+    volumes:
+    - snapshots-db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: pg_isready -U snapshots
+      interval: 2s
+      timeout: 3s
+      retries: 40
+
+  migrator:
+    image: snapshots:${SNAPSHOTS_VERSION:-latest}
+    restart: "no"
+    command: alembic upgrade head
+    environment:
+      SNAPSHOTS_DB_HOST: snapshots-db
+      SNAPSHOTS_DB_PORT: 5432
+      SNAPSHOTS_DB_USER: snapshots
+      SNAPSHOTS_DB_PASS: snapshots
+      SNAPSHOTS_DB_BASE: snapshots
+    depends_on:
+      db:
+        condition: service_healthy
+
+  redis:
+    image: bitnami/redis:6.2.5
+    hostname: "snapshots-redis"
+    restart: always
+    environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 50
+
+  rmq:
+    image: rabbitmq:3.9.16-alpine
+    hostname: "snapshots-rmq"
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    healthcheck:
+      test: rabbitmq-diagnostics check_running -q
+      interval: 3s
+      timeout: 3s
+      retries: 50
+
+
+
+volumes:
+  snapshots-db-data:
+    name: snapshots-db-data
