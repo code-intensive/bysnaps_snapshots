@@ -46,7 +46,7 @@ docker-compose -f docker/docker-compose.yml --project-directory . build
 ## Project structure
 
 ```bash
-$ tree "snap_shots"
+$ tree "snapshots"
 snapshots
 ├── conftest.py  # Fixtures for all tests.
 ├── db  # module contains db configurations
