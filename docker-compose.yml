@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  snapshots:
+    build:
+      context: .
+      dockerfile: "./snapshots/config/docker/Dockerfile"
+    image: bysnaps_snapshots:${SNAPSHOTS_VERSION:-latest}
+    container_name: snapshots_api
+    pull_policy: never
+    restart: always
+    healthcheck:
+      test: curl "0.0.0.0:8000/api/v1/snap-shots/health-check"
+      interval: 2s
+      retries: 10
+      timeout: 3s
+    env_file:
+      - "./snapshots/config/.envs/snapshots/.env"
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    ports:
+      - 8000:8000
+
+  postgres:
+    image: postgres:13.8-bullseye
+    hostname: snapshots-database
+    container_name: snapshots_postgres
+    env_file:
+      - "./snapshots/config/.envs/postgres/.env"
+    volumes:
+      - snapshots-db-data:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: pg_isready -U snapshots
+      interval: 2s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:latest
+    container_name: snapshots_redis
+    restart: always
+    env_file:
+      - "./snapshots/config/.envs/redis/.env"
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: redis-cli ping
+      interval: 1s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: snapshots_rabbitmq
+    restart: always
+    healthcheck:
+      test: rabbitmq-diagnostics check_running -q
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    env_file:
+      - "./snapshots/config/.envs/rabbitmq/.env"
+
+volumes:
+  snapshots-db-data:
+    name: snapshots-db-data

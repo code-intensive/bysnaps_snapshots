@@ -1,0 +1,112 @@
+#main.yml
+#This workflow will install Python dependencies, lint using Black, run tests using Pytest
+
+name: snapshots-github-actions
+
+on:
+  push:
+
+  pull_request:
+    branches:
+      - main
+
+#A workflow job running sequentially
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: Run black checks and format
+        run: "poetry run black . --check"
+
+  flake8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: check and format with flake8
+        run: "poetry run flake8 . --count"
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: perform static type checks with mypy
+        run: "poetry run mypy ."
+
+  pytest:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:13.8-bullseye
+        env:
+          POSTGRES_PASSWORD: snapshots
+          POSTGRES_USER: postgres
+          POSTGRES_DB: snapshots
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+        ports:
+          - 5432:5432
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v2
+      - name: set up python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+      - name: set up poetry
+        uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: "1.2.2"
+      - name: install dependencies
+        run: poetry install --no-root
+      - name: run all tests cases using pytest
+        run: "poetry run pytest"
+        env:
+          CLOUD_NAME: ${{secrets.CLOUD_NAME}}
+          CLOUD_API_KEY: ${{secrets.API_KEY}}
+          CLOUD_API_SECRET: ${{secrets.API_SECRET}}
+          CLOUD_URL: ${{secrets.CLOUD_URL}}
+          DB_PORT: 5432
+          DB_PASSWORD: snapshots
+          DB_USER: postgres
+          DB_HOST: localhost
+          DB_NAME: /snapshots
+          DB_DRIVERNAME: postgresql
+          DB_ECHO: true
+          DB_SCHEME: postgresql+asyncpg
