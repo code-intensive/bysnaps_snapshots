@@ -30,6 +30,7 @@ autoflake = "^1.7.7"
 redis = "^4.3.4"
 fastapi-pagination = "^0.10.0"
 aiosqlite = "^0.17.0"
+celery = "^5.2.7"
 
 
 [build-system]

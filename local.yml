@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: "./snapshots/config/docker/Dockerfile"
     image: bysnaps_snapshots:${SNAPSHOTS_VERSION:-latest}
-    container_name: snapshots_api
+    container_name: snapshots_api_dev
     pull_policy: never
     restart: always
     healthcheck:
@@ -15,7 +15,8 @@ services:
       retries: 10
       timeout: 3s
     env_file:
-      - "./snapshots/config/.envs/snapshots/.env"
+      - "./snapshots/config/.envs/snapshots/local/.env"
+
     depends_on:
       redis:
         condition: service_healthy
@@ -27,9 +28,11 @@ services:
   postgres:
     image: postgres:13.8-bullseye
     hostname: snapshots-database
-    container_name: snapshots_postgres
-    env_file:
-      - "./snapshots/config/.envs/postgres/.env"
+    container_name: snapshots_postgres_dev
+    environment:
+      POSTGRES_PASSWORD: snapshots
+      POSTGRES_USER: snapshots
+      POSTGRES_DB: snapshots
     volumes:
       - snapshots-db-data:/var/lib/postgresql/data
     restart: always
@@ -41,7 +44,7 @@ services:
 
   redis:
     image: redis:latest
-    container_name: snapshots_redis
+    container_name: snapshots_redis_dev
     restart: always
     env_file:
       - "./snapshots/config/.envs/redis/.env"

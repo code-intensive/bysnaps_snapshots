@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi_pagination import add_pagination
 
 from snapshots.config.settings import settings
@@ -13,7 +14,7 @@ def get_app() -> FastAPI:
 
     This is the main constructor of an application.
 
-    :return: application.
+    :return: configured fastAPI application.
     """
     app = FastAPI(**settings.APP_SETTINGS)
     app.add_middleware(**CORS_MIDDLEWARE_CONFIG)
@@ -23,5 +24,7 @@ def get_app() -> FastAPI:
     async def startup() -> None:
         """Sets up needed config on startup event."""
         await set_up_database()
+
+    app.mount("/static", StaticFiles(directory=settings.STATIC_DIR), name="static")
 
     return add_pagination(app)

@@ -1,4 +1,4 @@
-import enum
+from enum import Enum
 from os import getenv
 from pathlib import Path
 from tempfile import gettempdir
@@ -9,7 +9,7 @@ from pydantic import BaseSettings
 from yarl import URL
 
 
-class LogLevel(str, enum.Enum):  # noqa: WPS600
+class LogLevel(str, Enum):  # noqa: WPS600
     """Possible log levels."""
 
     NOTSET = "NOTSET"
@@ -29,34 +29,47 @@ class Settings(BaseSettings):
     with environment variables.
     """
 
+    APP_ROOT = Path(__file__).parent.parent
+    DOT_ENVS_ROOT_DIR = APP_ROOT.joinpath("config", ".envs")
+    REDIS_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("redis", ".env")
+    CELERY_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("celery", ".env")
+    API_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("snapshots", ".env")
+    POSTGRES_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("postgres", ".env")
+    RABBITMQ_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("rabbitmq", ".env")
+
+    load_dotenv(dotenv_path=API_ENV_PATH)
+    load_dotenv(dotenv_path=REDIS_ENV_PATH)
+    load_dotenv(dotenv_path=CELERY_ENV_PATH)
+    load_dotenv(dotenv_path=POSTGRES_ENV_PATH)
+    load_dotenv(dotenv_path=RABBITMQ_ENV_PATH)
+
     API_VERSION = "/api/v1"
     TEMP_DIR = Path(gettempdir())
-    PROJECT_ROOT = Path(__file__).parent.parent
-    DOT_ENV_PATH = PROJECT_ROOT.joinpath("config/env/production/.env")
     DEBUG = getenv("DEBUG", False)
-
-    load_dotenv(dotenv_path=DOT_ENV_PATH)
+    PROJECT_ROOT = APP_ROOT.parent
+    STATIC_DIR = PROJECT_ROOT.joinpath("static").as_posix()
 
     PROJECT_DESCRIPTION = (
-        "The core snap processing service for the buysnaps microservices project."
+        "The core snap processing service for the bysnaps microservices project."
     )
 
     APP_SETTINGS = {
         "version": "0.1.0",
-        "title": "Buysnaps | Snaps [v1]",
+        "title": "Bysnaps | Snaps [v1]",
         "debug": DEBUG,
         "description": PROJECT_DESCRIPTION,
         "docs_url": API_VERSION + "/docs",
+        "redoc_url": API_VERSION + "/redocs",
     }
 
     DATABASE_URL = "sqlite+aiosqlite:///./snap_shot.db"
 
-    host = "0.0.0.0"
+    host = getenv("HOST")
     port = 8000
     # quantity of workers for uvicorn
     workers_count: int = 1
     # Enable uvicorn reloading
-    reload: bool = bool(DEBUG)
+    reload: str | bool = getenv("RELOAD_SNAPSHOTS", False)
 
     # Current environment
     environment: str = "dev"
