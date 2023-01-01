@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapCreate, SnapUpdate
+from snapshots.models.snaps import SnapCreateModel, SnapUpdateModel
 from snapshots.services.dependencies import get_snap_service
 from snapshots.services.interfaces.interface import ISnapService
 
@@ -11,13 +11,13 @@ def health_check() -> None:
 
 
 async def create_snap(
-    snap: SnapCreate,
+    snap: SnapCreateModel,
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> Snap:
-    """Creates a new Snapshot from the provided SnapCreate.
+    """Creates a new Snapshot from the provided SnapCreateModel.
 
     :param snap: a dictionary mapping with
-    the structure of the Pydantic SnapCreate model.
+    the structure of the Pydantic SnapCreateModel.
 
     :param snap_service: a SnapService instance to be injected for creation.
 
@@ -29,12 +29,12 @@ async def create_snap(
 
 
 async def get_snap(
-    snap_id: str,
+    id: str,
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> Snap:
     """Retrieves a snapshot from the database,
 
-    :param snap_id: id of the snap to be retrieved.
+    :param id: id of the snap to be retrieved.
 
     :param snap_service: a SnapService instance to be injected for snap retrieval.
 
@@ -44,19 +44,17 @@ async def get_snap(
 
     :rtype: Snap
     """
-    return await snap_service.get_snap(snap_id)
+    return await snap_service.get_snap(id)
 
 
 async def get_snaps(
     snap_service: ISnapService = Depends(get_snap_service),
-    limit: int = 30,
-    offset: int = 50,
 ) -> list[Snap]:
     """Retrieves Snapshots from the database.
 
     :param snap_service: A SnapService instance to be injected for snaps retrieval.
 
-    :return: a list of existing snaps.
+    :return: a paginated list of all existing snaps.
 
     :rtype: list[Snap].
     """
@@ -64,28 +62,31 @@ async def get_snaps(
 
 
 async def update_snap(
-    snap_update: SnapUpdate,
+    id: str,
+    snap_update: SnapUpdateModel,
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> None:
     """Updates an existing Snapshot at the database level,
 
     raises a 404 if the snap does not exist.
 
-    :param snap_update: A dictionary mapping to the pydantic SnapUpdate model.
+    :param id: id of the snap to be updated.
+
+    :param snap_update: A dictionary mapping to the pydantic SnapUpdateModel.
 
     :param snap_service: A SnapService instance to be injected to update snap.
     """
-    return await snap_service.update_snap(snap_update)
+    return await snap_service.update_snap(id, snap_update)
 
 
 async def delete_snap(
-    snap_id: str,
+    id: str,
     snap_service: ISnapService = Depends(get_snap_service),
 ) -> None:
     """Deletes a Snapshot from the database, raises a 404 if the snap does not exist.
 
-    :param snap_id: id of the snap to be deleted.
+    :param id: id of the snap to be deleted.
 
     :param snap_service: A SnapService instance to be injected for snap deletion.
     """
-    return await snap_service.delete_snap(snap_id)
+    return await snap_service.delete_snap(id)

@@ -1,19 +1,19 @@
 from abc import ABCMeta, abstractmethod
 
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapCreate, SnapUpdate
+from snapshots.models.snaps import SnapCreateModel, SnapUpdateModel
 
 
 class ISnapService(metaclass=ABCMeta):
     """Interface for all snap service concretions."""
 
     @abstractmethod
-    async def create_snap(self, snap_create: SnapCreate) -> Snap:
+    async def create_snap(self, snap_create: SnapCreateModel) -> Snap:
         """Service method for snap creation.
 
         :param snap_create: A pydantic model for request validation.
 
-        :type snap_create: SnapCreate.
+        :type snap_create: SnapCreateModel.
 
         :returns: Snap a newly created snap.
 
@@ -32,10 +32,10 @@ class ISnapService(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def get_snap(self, snap_id: str) -> Snap:
+    async def get_snap(self, id: str) -> Snap:
         """Service method for snap retrieval by id.
 
-        :param snap_id: A string to uniquely identify the snap.
+        :param id: A string to uniquely identify the snap.
 
         :raises HTTPException: a 404 exception if the requested snap does not exist.
 
@@ -46,7 +46,7 @@ class ISnapService(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def update_snap(self, snap_update: SnapUpdate) -> None:
+    async def update_snap(self, snap_update: SnapUpdateModel) -> None:
         """Service method for updating snap.
 
         :param snap_update: A pydantic model for request validation.
@@ -56,10 +56,10 @@ class ISnapService(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def delete_snap(self, snap_id: str) -> None:
+    async def delete_snap(self, id: str) -> None:
         """Service method for snap deletion.
 
-        :param snap_id: A string to uniquely identify the snap.
+        :param id: A string to uniquely identify the snap.
 
         :raises HTTPException: a 404 exception if the requested snap does not exist.
         """

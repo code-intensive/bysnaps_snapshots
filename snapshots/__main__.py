@@ -11,7 +11,7 @@ def set_multiproc_dir() -> None:
     Sets mutiproc_dir env variable.
 
     This function cleans up the multiprocess directory
-    and recreates it. This actions are required by prometheus-client
+    and recreates it. These actions are required by prometheus-client
     to share metrics between processes.
 
     After cleanup, it sets two variables.
@@ -38,7 +38,7 @@ def main() -> None:
         "snapshots.main:get_app",
         workers=settings.workers_count,
         host=settings.host,
-        port=settings.port,
+        port=int(settings.port),
         reload=True,
         log_level=settings.log_level.value.lower(),
         factory=True,

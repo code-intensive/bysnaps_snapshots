@@ -19,7 +19,7 @@ snaps_router.add_api_route(
     path="/health-check",
     endpoint=health_check,
     methods=["get"],
-    summary="Service health check",
+    summary="Service health check.",
     response_description=(
         "Returns `null`, it simply shows "
         "that the service is up with a HTTP_200_OK status code."
@@ -31,7 +31,8 @@ snaps_router.add_api_route(
     endpoint=create_snap,
     methods=["post"],
     status_code=HTTP_201_CREATED,
-    summary="Create a new snap",
+    summary="Create a new snap.",
+    response_model=SnapResponseModel,
     response_description="Returns a newly created `SnapResponseModel`.",
 )
 
@@ -44,7 +45,7 @@ snaps_router.add_api_route(
 )
 
 snaps_router.add_api_route(
-    path="/{snap_id}",
+    path="/{id}",
     endpoint=get_snap,
     methods=["get"],
     response_model=SnapResponseModel,
@@ -52,7 +53,7 @@ snaps_router.add_api_route(
 )
 
 snaps_router.add_api_route(
-    path="",
+    path="/{id}",
     endpoint=update_snap,
     methods=["patch"],
     status_code=HTTP_204_NO_CONTENT,
@@ -60,7 +61,7 @@ snaps_router.add_api_route(
 )
 
 snaps_router.add_api_route(
-    path="/{snap_id}",
+    path="/{id}",
     endpoint=delete_snap,
     methods=["delete"],
     status_code=HTTP_204_NO_CONTENT,

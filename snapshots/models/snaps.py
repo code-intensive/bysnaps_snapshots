@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from snapshots.models.snap_item import SnapItem
 
 
-class SnapBase(BaseModel):
+class BaseSnapModel(BaseModel):
     """Base class for Snap pydantic models."""
 
     snap_items: list[SnapItem] = Field(
@@ -17,7 +17,7 @@ class SnapBase(BaseModel):
     )
 
 
-class SnapCreate(SnapBase):
+class SnapCreateModel(BaseSnapModel):
     """A Snap holds required data for QRCode creation, used for post."""
 
     customer_id: str = Field(
@@ -30,13 +30,11 @@ class SnapCreate(SnapBase):
     )
 
 
-class SnapUpdate(SnapBase):
+class SnapUpdateModel(BaseSnapModel):
     """An snap containing id, snap_items and description to be updated."""
 
-    id: str
 
-
-class SnapResponseModel(SnapCreate):
+class SnapResponseModel(SnapCreateModel):
     """An existing snap matching the database schema,
     containing id, snap_url and created_at.
     """

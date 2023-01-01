@@ -55,7 +55,7 @@ class Settings(BaseSettings):
 
     APP_SETTINGS = {
         "version": "0.1.0",
-        "title": "Bysnaps | Snaps [v1]",
+        "title": "Bysnaps | Snapshots [v1]",
         "debug": DEBUG,
         "description": PROJECT_DESCRIPTION,
         "docs_url": API_VERSION + "/docs",
@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     DATABASE_URL = "sqlite+aiosqlite:///./snap_shot.db"
 
     host = getenv("HOST")
-    port = 8000
+    port = getenv("PORT")
     # quantity of workers for uvicorn
     workers_count: int = 1
     # Enable uvicorn reloading

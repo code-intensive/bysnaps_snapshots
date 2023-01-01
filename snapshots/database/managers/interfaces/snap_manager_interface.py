@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapResponseModel, SnapUpdate
+from snapshots.models.snaps import SnapResponseModel, SnapUpdateModel
 
 
 class ISnapManager(metaclass=ABCMeta):
@@ -20,10 +20,10 @@ class ISnapManager(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def fetchone(self, snap_id: str) -> Snap:
+    async def fetchone(self, id: str) -> Snap:
         """Retrieves a snapshot from the databases using it's snap id.
 
-        :param snap_id: A string representing a snap's id.
+        :param id: A string representing a snap's id.
 
         :raises HTTPException: A 404 error if requested snapshot does not exist
 
@@ -44,7 +44,7 @@ class ISnapManager(metaclass=ABCMeta):
         ...
 
     @abstractmethod
-    async def update(self, snap_update: SnapUpdate) -> None:
+    async def update(self, snap_update: SnapUpdateModel) -> None:
         """Updates a snap shot in the database.
 
         :param snap_update: A json with a body mapping to the snap_update.

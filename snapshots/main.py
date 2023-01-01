@@ -18,7 +18,7 @@ def get_app() -> FastAPI:
     """
     app = FastAPI(**settings.APP_SETTINGS)
     app.add_middleware(**CORS_MIDDLEWARE_CONFIG)
-    app.include_router(snaps_router, prefix=settings.API_VERSION)
+    app.include_router(snaps_router, prefix=settings.API_VERSION, tags=["snap-shots"])
 
     @app.on_event("startup")
     async def startup() -> None:

@@ -3,7 +3,7 @@ from datetime import datetime
 
 from snapshots.database.managers.interfaces.snap_manager_interface import ISnapManager
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapCreate, SnapResponseModel, SnapUpdate
+from snapshots.models.snaps import SnapCreateModel, SnapResponseModel, SnapUpdateModel
 from snapshots.modules.cloud_snaps.interfaces.cloud_snap_interface import (
     ICloudSnapService,
 )
@@ -27,27 +27,27 @@ class SnapService(ISnapService):
         self.snap_generator = snap_generator
         self.snap_cloud_service = snap_cloud_service
 
-    async def create_snap(self, snap_create: SnapCreate) -> Snap:
+    async def create_snap(self, snap_create: SnapCreateModel) -> Snap:
         snap = await self._build_snap(snap_create)
         return await self.snap_manager.create(snap)
 
     async def get_snaps(self) -> list[Snap]:
         return await self.snap_manager.fetchall()
 
-    async def get_snap(self, snap_id: str) -> Snap:
-        return await self.snap_manager.fetchone(snap_id)
+    async def get_snap(self, id: str) -> Snap:
+        return await self.snap_manager.fetchone(id)
 
-    async def update_snap(self, snap_update: SnapUpdate) -> None:
-        return await self.snap_manager.update(snap_update)
+    async def update_snap(self, id: str, snap_update: SnapUpdateModel) -> None:
+        return await self.snap_manager.update(id, snap_update)
 
-    async def delete_snap(self, snap_id: str) -> None:
-        snap = await self.get_snap(snap_id)
+    async def delete_snap(self, id: str) -> None:
+        snap = await self.get_snap(id)
         await asyncio.gather(
             self.snap_cloud_service.delete_snap(snap),
             self.snap_manager.delete(snap),
         )
 
-    async def _build_snap(self, snap_create: SnapCreate) -> SnapResponseModel:
+    async def _build_snap(self, snap_create: SnapCreateModel) -> SnapResponseModel:
         """Private method for snap building.
 
         :param snap_create: A pydantic model for request validation.
@@ -56,11 +56,11 @@ class SnapService(ISnapService):
 
         :rtype: SnapResponseModel.
         """
-        snap_id = generate_uuid("snap")
-        snap_bytes = self.snap_generator.generate_snap(snap_id)
+        id = generate_uuid("snap")
+        snap_bytes = self.snap_generator.generate_snap(id)
         cloudinary_snap = await self.snap_cloud_service.upload_snap(snap_bytes)
         return SnapResponseModel(
-            id=snap_id,
+            id=id,
             created_at=datetime.now(),
             snap_url=cloudinary_snap.url,
             **snap_create.dict()

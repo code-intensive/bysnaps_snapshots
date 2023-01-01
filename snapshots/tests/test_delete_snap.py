@@ -14,7 +14,7 @@ def test_snap_deletes(
 
     delete_snap_endpoint = fast_api_app.url_path_for(
         "delete_snap",
-        snap_id=created_snap["id"],
+        id=created_snap["id"],
     )
     response = client.delete(delete_snap_endpoint)
 
@@ -23,7 +23,7 @@ def test_snap_deletes(
 
     get_snap_endpoint = fast_api_app.url_path_for(
         "get_snap",
-        snap_id=created_snap["id"],
+        id=created_snap["id"],
     )
     response = client.get(get_snap_endpoint)
 

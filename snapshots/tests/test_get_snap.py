@@ -14,7 +14,7 @@ def test_snap_exists(
 
     get_snap_endpoint = fast_api_app.url_path_for(
         "get_snap",
-        snap_id=created_snap["id"],
+        id=created_snap["id"],
     )
 
     response = client.get(get_snap_endpoint)
@@ -30,7 +30,7 @@ def test_snap_exists(
 
 def test_snap_does_not_exist(client: TestClient, fast_api_app: FastAPI) -> None:
     snap_uuid = "snap_3c7abe3fe7ac49359c33ca39c5b56c33"
-    get_snap_endpoint = fast_api_app.url_path_for("get_snap", snap_id=snap_uuid)
+    get_snap_endpoint = fast_api_app.url_path_for("get_snap", id=snap_uuid)
 
     response = client.get(get_snap_endpoint)
 

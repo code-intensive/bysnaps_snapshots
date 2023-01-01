@@ -14,7 +14,10 @@ def test_snap_updates(
 ) -> None:
     created_snap = create_snap_fixture()
     update_data.update({"id": created_snap["id"]})
-    update_snap_endpoint = fast_api_app.url_path_for("update_snap")
+    update_snap_endpoint = fast_api_app.url_path_for(
+        "update_snap",
+        id=created_snap["id"],
+    )
     response = client.patch(update_snap_endpoint, data=json.dumps(update_data))
 
     assert response.status_code == HTTP_204_NO_CONTENT
@@ -22,7 +25,7 @@ def test_snap_updates(
 
     get_snap_endpoint = fast_api_app.url_path_for(
         "get_snap",
-        snap_id=created_snap["id"],
+        id=created_snap["id"],
     )
     response = client.get(get_snap_endpoint)
 

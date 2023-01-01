@@ -79,9 +79,9 @@ def downgrade() -> None:
         sa.Column("id", sa.VARCHAR(length=50), autoincrement=False, nullable=False),
         sa.Column("quantity", sa.INTEGER(), autoincrement=False, nullable=True),
         sa.Column("item_id", sa.VARCHAR(length=50), autoincrement=False, nullable=True),
-        sa.Column("snap_id", sa.VARCHAR(length=50), autoincrement=False, nullable=True),
+        sa.Column("id", sa.VARCHAR(length=50), autoincrement=False, nullable=True),
         sa.ForeignKeyConstraint(
-            ["snap_id"],
+            ["id"],
             ["snaps.id"],
             name="snap_items_snap_id_fkey",
             ondelete="CASCADE",
