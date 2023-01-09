@@ -158,3 +158,4 @@ cython_debug/
 snap_shot.db
 logs
 .vscode/
+.DS_Store
