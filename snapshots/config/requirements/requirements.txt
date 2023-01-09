@@ -2,7 +2,7 @@ cloudinary==1.30.0
 fastapi==0.85.1
 numpy==1.23.4
 opencv-python==4.6.0.66
-Pillow==9.2.0
+Pillow==9.3.0
 pydantic==1.10.2
 python-dotenv==0.21.0
 qrcode==7.3.1
