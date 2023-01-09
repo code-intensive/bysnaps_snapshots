@@ -11,7 +11,7 @@ To run the project use this set of commands:
 
 ```bash
 poetry install
-poetry run python -m app
+poetry run python -m snapshots
 ```
 
 This will start the server on the configured host.
@@ -25,14 +25,14 @@ You can read more about poetry here: https://python-poetry.org/
 You can start the project with docker using this command:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . up --build
+docker compose -f docker-compose.yml --project-directory . up --build
 ```
 
 If you want to develop in docker with autoreload add `-f docker/docker-compose.dev.yml` to your docker command.
 Like this:
 
 ```bash
-docker-compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml --project-directory . up
+docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml --project-directory . up
 ```
 
 This command exposes the web application on port 8000, mounts current directory and enables autoreload.
@@ -40,28 +40,7 @@ This command exposes the web application on port 8000, mounts current directory 
 But you have to rebuild image every time you modify `poetry.lock` or `pyproject.toml` with this command:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . build
-```
-
-## Project structure
-
-```bash
-$ tree "snapshots"
-snapshots
-├── conftest.py  # Fixtures for all tests.
-├── db  # module contains db configurations
-│   ├── dao  # Data Access Objects. Contains different classes to inteact with database.
-│   └── models  # Package contains different models for ORMs.
-├── __main__.py  # Startup script. Starts uvicorn.
-├── services  # Package for different external services such as rabbit or redis etc.
-├── settings.py  # Main configuration settings for project.
-├── static  # Static content.
-├── tests  # Tests for project.
-└── web  # Package contains web server. Handlers, startup config.
-    ├── api  # Package with all handlers.
-    │   └── router.py  # Main router.
-    ├── application.py  # FastAPI application configuration.
-    └── lifetime.py  # Contains actions to perform on startup and shutdown.
+docker compose -f docker-compose.yml --project-directory . build
 ```
 
 ## Configuration
@@ -78,11 +57,27 @@ For example if you see in your "snapshots/settings.py" a variable named like
 variable to configure the value. This behaviour can be changed by overriding `env_prefix` property
 in `snapshots.settings.Settings.Config`.
 
-An exmaple of .env file:
+An exmaple of .env file (You can find it in the root project directory's .env.example):
 ```bash
-SNAPSHOTS_RELOAD="True"
-SNAPSHOTS_PORT="8000"
-SNAPSHOTS_ENVIRONMENT="dev"
+DEBUG = boolean # false
+ALLOWED_HOSTS = string # 127.0.0.1, 192.168.64.3 (comma separated)
+SETTINGS_MODULE = string # 'config.settings'
+SECRET_KEY = string
+TOKEN_KEY = string
+
+CLOUD_NAME = string
+CLOUD_API_KEY = string
+CLOUD_API_SECRET = string
+CLOUD_URL= string
+
+DB_PORT = integer # 5432
+DB_PASSWORD = string # my*awesome^password
+DB_USER = string # postgres
+DB_HOST = string # localhost
+DB_NAME = string # with slash prepended to it e.g /test_database
+DB_DRIVERNAME = string # postgres
+DB_ECHO = boolean # false
+DB_SCHEME = string #postgresql+asyncpg
 ```
 
 You can read more about BaseSettings class here: https://pydantic-docs.helpmanual.io/usage/settings/
@@ -102,7 +97,6 @@ By default it runs:
 * mypy (validates types);
 * isort (sorts imports in all files);
 * flake8 (spots possibe bugs);
-* yesqa (removes useless `# noqa` comments).
 
 
 You can read more about pre-commit here: https://pre-commit.com/
@@ -146,8 +140,8 @@ alembic revision
 If you want to run it in docker, simply run:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . run --rm api pytest -vv .
-docker-compose -f docker/docker-compose.yml --project-directory . down
+docker compose -f docker/docker-compose.yml --project-directory . run --rm api pytest -vv .
+docker compose -f docker/docker-compose.yml --project-directory . down
 ```
 
 For running tests on your local machine.
