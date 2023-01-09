@@ -5,7 +5,6 @@ from tempfile import gettempdir
 
 import cloudinary
 from dotenv import load_dotenv
-from pydantic import BaseSettings
 from yarl import URL
 
 
@@ -20,7 +19,7 @@ class LogLevel(str, Enum):  # noqa: WPS600
     FATAL = "FATAL"
 
 
-class Settings(BaseSettings):
+class Settings:
     """
     Application settings.
 
