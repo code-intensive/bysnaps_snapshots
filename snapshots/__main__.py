@@ -39,9 +39,9 @@ def main() -> None:
         workers=settings.workers_count,
         host=settings.host,
         port=int(settings.port),
-        reload=True,
+        reload=settings.reload,
         log_level=settings.log_level.value.lower(),
-        factory=True,
+        factory=settings.use_factory,
     )
 
 

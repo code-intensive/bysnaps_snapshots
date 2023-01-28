@@ -1,13 +1,12 @@
-from abc import ABCMeta, abstractmethod
+from typing import Protocol
 
 from snapshots.database.models.models import Snap
 from snapshots.models.snaps import SnapCreateModel, SnapUpdateModel
 
 
-class ISnapService(metaclass=ABCMeta):
-    """Interface for all snap service concretions."""
+class SnapServiceProtocol(Protocol):
+    """Protocol for all snap service concretions."""
 
-    @abstractmethod
     async def create_snap(self, snap_create: SnapCreateModel) -> Snap:
         """Service method for snap creation.
 
@@ -21,7 +20,6 @@ class ISnapService(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def get_snaps(self) -> list[Snap]:
         """Service method for snap retrieval, returns all existing snaps.
 
@@ -31,7 +29,6 @@ class ISnapService(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def get_snap(self, id: str) -> Snap:
         """Service method for snap retrieval by id.
 
@@ -45,7 +42,6 @@ class ISnapService(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def update_snap(self, snap_update: SnapUpdateModel) -> None:
         """Service method for updating snap.
 
@@ -55,7 +51,6 @@ class ISnapService(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def delete_snap(self, id: str) -> None:
         """Service method for snap deletion.
 

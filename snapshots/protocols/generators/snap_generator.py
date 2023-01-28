@@ -1,11 +1,10 @@
-from abc import ABCMeta, abstractmethod
+from typing import Protocol
 
 
-class ISnapGenerator(metaclass=ABCMeta):
-    """Snap generator interface."""
+class SnapGeneratorProtocol(Protocol):
+    """Snap generator protocol."""
 
     @staticmethod
-    @abstractmethod
     def generate_snap(id: str, **options: dict[str, str | int]) -> bytes:
         """Creates snaps based on the raw snap passed to the instance.
 

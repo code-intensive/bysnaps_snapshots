@@ -5,13 +5,10 @@ from starlette.status import HTTP_503_SERVICE_UNAVAILABLE
 
 from snapshots.config.settings import settings
 from snapshots.database.models.models import Snap
-from snapshots.modules.cloud_snaps.interfaces.cloud_snap_interface import (
-    ICloudSnapService,
-)
 from snapshots.utils.parsers import public_id_from_snap_url
 
 
-class CloudinarySnapService(ICloudSnapService):
+class CloudinaryService:
     """Cloudinary service for snapshot cloud storage management."""
 
     @staticmethod

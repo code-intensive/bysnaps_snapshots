@@ -47,7 +47,7 @@ class Settings(BaseSettings):
     TEMP_DIR = Path(gettempdir())
     DEBUG = getenv("DEBUG", False)
     PROJECT_ROOT = APP_ROOT.parent
-    STATIC_DIR = PROJECT_ROOT.joinpath("static").as_posix()
+    RESOURCES_DIR = APP_ROOT.joinpath("resources").as_posix()
 
     PROJECT_DESCRIPTION = (
         "The core snap processing service for the bysnaps microservices project."
@@ -62,29 +62,28 @@ class Settings(BaseSettings):
         "redoc_url": API_VERSION + "/redocs",
     }
 
-    DATABASE_URL = "sqlite+aiosqlite:///./snap_shot.db"
-
     host = getenv("HOST")
     port = getenv("PORT")
     # quantity of workers for uvicorn
     workers_count: int = 1
     # Enable uvicorn reloading
     reload: str | bool = getenv("RELOAD_SNAPSHOTS", False)
+    use_factory: str | bool = getenv("USE_FACTORY", False)
 
     # Current environment
-    environment: str = "dev"
+    environment: str = getenv("ENVIRON", "dev")
 
     log_level: LogLevel = LogLevel.INFO
 
     # Variables for the database
 
-    _db_scheme = str(getenv("DB_SCHEME"))
-    _db_host = str(getenv("DB_HOST"))
-    _db_port = int(getenv("DB_PORT", 0))
-    _db_user: str | None = getenv("DB_USER")
-    _db_pass: str | None = getenv("DB_PASSWORD")
-    _db_name = str(getenv("DB_NAME"))
-    _db_base = str(getenv("DB_BASE"))
+    db_scheme = str(getenv("DB_SCHEME"))
+    db_host = str(getenv("DB_HOST"))
+    db_port = int(getenv("DB_PORT", 0))
+    db_user: str | None = getenv("DB_USER")
+    db_pass: str | None = getenv("DB_PASSWORD")
+    db_name = str(getenv("DB_NAME"))
+    db_base = str(getenv("DB_BASE"))
     db_echo = bool(getenv("DB_ECHO"))
 
     # Variables for Redis
@@ -115,7 +114,7 @@ class Settings(BaseSettings):
         "api_secret": getenv("CLOUD_API_SECRET"),
     }
 
-    CLOUD_SNAP_UPLOAD_FOLDER: str = "buysnaps/snap-shots/"
+    CLOUD_SNAP_UPLOAD_FOLDER: str | None = getenv("SNAP_UPLOAD_FOLDER")
 
     ALLOWED_ORIGINS = ("http://127.0.0.1:3000",)
 
@@ -128,12 +127,12 @@ class Settings(BaseSettings):
         """
         return str(
             URL.build(
-                scheme=self._db_scheme,
-                host=self._db_host,
-                port=self._db_port,
-                user=self._db_user,
-                password=self._db_pass,
-                path=self._db_name,
+                scheme=self.db_scheme,
+                host=self.db_host,
+                port=self.db_port,
+                user=self.db_user,
+                password=self.db_pass,
+                path=self.db_name,
             ),
         )
 

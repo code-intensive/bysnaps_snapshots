@@ -1,14 +1,12 @@
-from abc import ABCMeta, abstractmethod
-from typing import Any
+from typing import Any, Protocol
 
 from snapshots.database.models.models import Snap
 
 
-class ICloudSnapService(metaclass=ABCMeta):
-    """Cloudinary service interface."""
+class CloudSnapProtocol(Protocol):
+    """Cloudinary service protocol."""
 
     @staticmethod
-    @abstractmethod
     async def upload_snap(snap: bytes) -> Any:
         """Uploads snapshot image bytes.
 
@@ -21,7 +19,6 @@ class ICloudSnapService(metaclass=ABCMeta):
         ...
 
     @staticmethod
-    @abstractmethod
     async def delete_snap(snap: Snap) -> None:
         """Deletes a previously uploaded snapshot.
 

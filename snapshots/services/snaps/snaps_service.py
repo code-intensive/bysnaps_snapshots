@@ -1,27 +1,26 @@
 import asyncio
 from datetime import datetime
 
-from snapshots.database.managers.interfaces.snap_manager_interface import ISnapManager
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapCreateModel, SnapResponseModel, SnapUpdateModel
-from snapshots.modules.cloud_snaps.interfaces.cloud_snap_interface import (
-    ICloudSnapService,
+from snapshots.models.pydantic.snaps import (
+    SnapCreateModel,
+    SnapResponseModel,
+    SnapUpdateModel,
 )
-from snapshots.modules.generators.interfaces.snap_generator_interface import (
-    ISnapGenerator,
-)
-from snapshots.services.interfaces.interface import ISnapService
+from snapshots.protocols.cloudinary.cloud_snap import CloudSnapProtocol
+from snapshots.protocols.generators.snap_generator import SnapGeneratorProtocol
+from snapshots.protocols.managers.manager import SnapManagerProtocol
 from snapshots.utils.id_generator import generate_uuid
 
 
-class SnapService(ISnapService):
+class SnapService:
     """SnapService class."""
 
     def __init__(
         self,
-        snap_manager: ISnapManager,
-        snap_generator: ISnapGenerator,
-        snap_cloud_service: ICloudSnapService,
+        snap_manager: SnapManagerProtocol,
+        snap_generator: SnapGeneratorProtocol,
+        snap_cloud_service: CloudSnapProtocol,
     ) -> None:
         self.snap_manager = snap_manager
         self.snap_generator = snap_generator

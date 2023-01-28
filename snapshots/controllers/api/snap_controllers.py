@@ -1,9 +1,9 @@
 from fastapi import Depends
 
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapCreateModel, SnapUpdateModel
-from snapshots.services.dependencies import get_snap_service
-from snapshots.services.interfaces.interface import ISnapService
+from snapshots.dependencies.service_dependency import get_snap_service
+from snapshots.models.pydantic.snaps import SnapCreateModel, SnapUpdateModel
+from snapshots.services.snaps.snaps_service import SnapService
 
 
 def health_check() -> None:
@@ -12,7 +12,7 @@ def health_check() -> None:
 
 async def create_snap(
     snap: SnapCreateModel,
-    snap_service: ISnapService = Depends(get_snap_service),
+    snap_service: SnapService = Depends(get_snap_service),
 ) -> Snap:
     """Creates a new Snapshot from the provided SnapCreateModel.
 
@@ -30,7 +30,7 @@ async def create_snap(
 
 async def get_snap(
     id: str,
-    snap_service: ISnapService = Depends(get_snap_service),
+    snap_service: SnapService = Depends(get_snap_service),
 ) -> Snap:
     """Retrieves a snapshot from the database,
 
@@ -48,7 +48,7 @@ async def get_snap(
 
 
 async def get_snaps(
-    snap_service: ISnapService = Depends(get_snap_service),
+    snap_service: SnapService = Depends(get_snap_service),
 ) -> list[Snap]:
     """Retrieves Snapshots from the database.
 
@@ -64,7 +64,7 @@ async def get_snaps(
 async def update_snap(
     id: str,
     snap_update: SnapUpdateModel,
-    snap_service: ISnapService = Depends(get_snap_service),
+    snap_service: SnapService = Depends(get_snap_service),
 ) -> None:
     """Updates an existing Snapshot at the database level,
 
@@ -81,7 +81,7 @@ async def update_snap(
 
 async def delete_snap(
     id: str,
-    snap_service: ISnapService = Depends(get_snap_service),
+    snap_service: SnapService = Depends(get_snap_service),
 ) -> None:
     """Deletes a Snapshot from the database, raises a 404 if the snap does not exist.
 

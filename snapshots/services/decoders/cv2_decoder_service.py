@@ -3,10 +3,8 @@ from abc import abstractmethod
 import cv2
 from PIL.Image import Image
 
-from snapshots.modules.decoders.interfaces.snap_decoder_interface import ISnapDecoder
 
-
-class CV2SnapDecoder(ISnapDecoder):
+class CV2SnapDecoder:
     """CV2 implementation of the SnapDecoder interface."""
 
     @staticmethod

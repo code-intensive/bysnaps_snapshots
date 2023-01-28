@@ -1,13 +1,12 @@
-from abc import ABCMeta, abstractmethod
+from typing import Protocol
 
 from PIL import Image
 
 
-class ISnapDecoder(metaclass=ABCMeta):
-    """Snap decoder interface."""
+class SnapDecoderProtocol(Protocol):
+    """Snap decoder protocol."""
 
     @staticmethod
-    @abstractmethod
     def decode_snap(barcode_image: Image) -> str:
         """Decodes a barcode.
 

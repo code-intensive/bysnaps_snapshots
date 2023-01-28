@@ -1,5 +1,5 @@
 from snapshots.database.models.models import Snap, SnapItem
-from snapshots.models.snaps import SnapResponseModel
+from snapshots.models.pydantic.snaps import SnapResponseModel
 
 
 def snap_from_pydantic(orm_snap: SnapResponseModel) -> Snap:

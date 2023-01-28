@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from snapshots.models.snap_item import SnapItem
+from snapshots.models.pydantic.snap_item import SnapItem
 
 
 class BaseSnapModel(BaseModel):

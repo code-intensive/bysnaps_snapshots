@@ -1,13 +1,12 @@
-from abc import ABCMeta, abstractmethod
+from typing import Protocol
 
 from snapshots.database.models.models import Snap
-from snapshots.models.snaps import SnapResponseModel, SnapUpdateModel
+from snapshots.models.pydantic.snaps import SnapResponseModel, SnapUpdateModel
 
 
-class ISnapManager(metaclass=ABCMeta):
-    """SnapManager interface"""
+class SnapManagerProtocol(Protocol):
+    """SnapManager Protocol"""
 
-    @abstractmethod
     async def create(self, snap_data: SnapResponseModel) -> Snap:
         """Stores snapshot details in the database.
 
@@ -19,7 +18,6 @@ class ISnapManager(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def fetchone(self, id: str) -> Snap:
         """Retrieves a snapshot from the databases using it's snap id.
 
@@ -33,7 +31,6 @@ class ISnapManager(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def fetchall(self) -> list[Snap]:
         """Retrieves all snap shots from the database.
 
@@ -43,7 +40,6 @@ class ISnapManager(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def update(self, snap_update: SnapUpdateModel) -> None:
         """Updates a snap shot in the database.
 
@@ -53,7 +49,6 @@ class ISnapManager(metaclass=ABCMeta):
         """
         ...
 
-    @abstractmethod
     async def delete(self, snap: Snap) -> None:
         """Deletes a snap shot from the database using it's snap id.
 

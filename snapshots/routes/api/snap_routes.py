@@ -10,7 +10,7 @@ from snapshots.controllers.api.snap_controllers import (
     health_check,
     update_snap,
 )
-from snapshots.models.snaps import SnapResponseModel
+from snapshots.models.pydantic.snaps import SnapResponseModel
 
 snaps_router = APIRouter(prefix="/snap-shots")
 
