@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from pydantic import BaseSettings
 from yarl import URL
 
+load_dotenv()
+
 
 class LogLevel(str, Enum):  # noqa: WPS600
     """Possible log levels."""
@@ -30,23 +32,10 @@ class Settings(BaseSettings):
     """
 
     APP_ROOT = Path(__file__).parent.parent
-    DOT_ENVS_ROOT_DIR = APP_ROOT.joinpath("config", ".envs")
-    REDIS_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("redis", ".env")
-    CELERY_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("celery", ".env")
-    API_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("snapshots", ".env")
-    POSTGRES_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("postgres", ".env")
-    RABBITMQ_ENV_PATH = DOT_ENVS_ROOT_DIR.joinpath("rabbitmq", ".env")
-
-    load_dotenv(dotenv_path=API_ENV_PATH)
-    load_dotenv(dotenv_path=REDIS_ENV_PATH)
-    load_dotenv(dotenv_path=CELERY_ENV_PATH)
-    load_dotenv(dotenv_path=POSTGRES_ENV_PATH)
-    load_dotenv(dotenv_path=RABBITMQ_ENV_PATH)
 
     API_VERSION = "/api/v1"
     TEMP_DIR = Path(gettempdir())
     DEBUG = getenv("DEBUG", False)
-    PROJECT_ROOT = APP_ROOT.parent
     RESOURCES_DIR = APP_ROOT.joinpath("resources").as_posix()
 
     PROJECT_DESCRIPTION = (
