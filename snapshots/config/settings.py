@@ -51,8 +51,8 @@ class Settings(BaseSettings):
         "redoc_url": API_VERSION + "/redocs",
     }
 
-    host = getenv("HOST")
-    port = getenv("PORT")
+    host: str | None = getenv("HOST")
+    port: str | None = getenv("PORT")
     # quantity of workers for uvicorn
     workers_count: int = 1
     # Enable uvicorn reloading
