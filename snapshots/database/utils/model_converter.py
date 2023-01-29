@@ -1,8 +1,8 @@
 from snapshots.database.models.models import Snap, SnapItem
-from snapshots.models.snaps import SnapResponseModel
+from snapshots.models.pydantic.snaps import SnapModel
 
 
-def snap_from_pydantic(orm_snap: SnapResponseModel) -> Snap:
+def snap_from_pydantic(orm_snap: SnapModel) -> Snap:
     """Converts a Pydantic input Snap to it's corresponding SQLAlchemy instance.
 
     :param orm_snap: A pydantic instance with all needed values to create a snap.

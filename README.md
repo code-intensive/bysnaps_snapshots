@@ -11,7 +11,7 @@ To run the project use this set of commands:
 
 ```bash
 poetry install
-poetry run python -m app
+poetry run python -m snapshots
 ```
 
 This will start the server on the configured host.
@@ -25,22 +25,21 @@ You can read more about poetry here: https://python-poetry.org/
 You can start the project with docker using this command:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . up --build
+docker-compose -f deploy/docker/compose/snapshots/docker-compose.yml up --build
 ```
 
-If you want to develop in docker with autoreload add `-f docker/docker-compose.dev.yml` to your docker command.
-Like this:
+If you want to develop in docker with autoreload add update your .env file like this:
 
-```bash
-docker-compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml --project-directory . up
+```env
+SNAPSHOTS_RELOAD = true
 ```
 
-This command exposes the web application on port 8000, mounts current directory and enables autoreload.
+This command exposes the web application on port 0.0.0.0, mounts current directory and enables autoreload.
 
 But you have to rebuild image every time you modify `poetry.lock` or `pyproject.toml` with this command:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . build
+docker-compose -f deploy/docker/compose/snapshots/docker-compose.yml build
 ```
 
 ## Project structure
@@ -48,20 +47,113 @@ docker-compose -f docker/docker-compose.yml --project-directory . build
 ```bash
 $ tree "snapshots"
 snapshots
-├── conftest.py  # Fixtures for all tests.
-├── db  # module contains db configurations
-│   ├── dao  # Data Access Objects. Contains different classes to inteact with database.
-│   └── models  # Package contains different models for ORMs.
-├── __main__.py  # Startup script. Starts uvicorn.
-├── services  # Package for different external services such as rabbit or redis etc.
-├── settings.py  # Main configuration settings for project.
-├── static  # Static content.
-├── tests  # Tests for project.
-└── web  # Package contains web server. Handlers, startup config.
-    ├── api  # Package with all handlers.
-    │   └── router.py  # Main router.
-    ├── application.py  # FastAPI application configuration.
-    └── lifetime.py  # Contains actions to perform on startup and shutdown.
+.
+├── .github
+│   └── workflows
+│       └── tests.yml
+├── deploy
+│   ├── docker
+│   │   ├── compose
+│   │   │   └── snapshots
+│   │   │       └── docker-compose.yml
+│   │   └── dockerfiles
+│   │       └── snapshots
+│   │           └── Dockerfile
+│   └── kubernetes
+│       └── .gitkeep
+├── docs
+│   └── .gitkeep
+├── logs
+│   └── pytest-logs.txt
+├── snapshots
+│   ├── api
+│   │   ├── controllers
+│   │   │   └── snap_controllers.py
+│   │   ├── routes
+│   │   │   └── api
+│   │   │       └── snap_routes.py
+│   │   └── services
+│   │       ├── cloudinary
+│   │       │   └── cloudinary_service.py
+│   │       ├── decoders
+│   │       │   └── cv2_decoder_service.py
+│   │       ├── generators
+│   │       │   └── qrcode_service.py
+│   │       └── snaps
+│   │           └── snaps_service.py
+│   ├── config
+│   │   ├── lifetimes
+│   │   │   └── .gitkeep
+│   │   ├── log_config.py
+│   │   └── settings.py
+│   ├── database
+│   │   ├── config
+│   │   │   └── setup.py
+│   │   ├── managers
+│   │   │   └── snap_manager.py
+│   │   ├── migrations
+│   │   │   ├── versions
+│   │   │   ├── env.py
+│   │   │   ├── README
+│   │   │   └── script.py.mako
+│   │   ├── models
+│   │   │   └── models.py
+│   │   └── utils
+│   │       ├── model_converter.py
+│   │       └── prebuilt_queries.py
+│   ├── dependencies
+│   │   └── service_dependency.py
+│   ├── middlewares
+│   │   └── cors_middleware.py
+│   ├── models
+│   │   └── pydantic
+│   │       ├── snap_item.py
+│   │       └── snaps.py
+│   ├── protocols
+│   │   ├── cloudinary
+│   │   │   └── cloud_snap.py
+│   │   ├── decoders
+│   │   │   └── snap_decoder.py
+│   │   ├── generators
+│   │   │   └── snap_generator.py
+│   │   ├── managers
+│   │   │   └── manager.py
+│   │   └── snaps
+│   │       └── snap_service.py
+│   ├── resources
+│   │   ├── css
+│   │   │   └── swagger-ui.css
+│   │   └── js
+│   │       ├── redoc.standalone.js
+│   │       └── swagger-ui-bundle.js
+│   ├── tests
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   ├── test_create_snap.py
+│   │   ├── test_delete_snap.py
+│   │   ├── test_get_snap.py
+│   │   ├── test_get_snaps.py
+│   │   ├── test_health.py
+│   │   └── test_update_snap.py
+│   ├── utils
+│   │   ├── id_generator.py
+│   │   └── parsers.py
+│   ├── __init__.py
+│   ├── __main__.py
+│   └── main.py
+├── .dockerignore
+├── .DS_Store
+├── .editorconfig
+├── .env
+├── .env.example
+├── .flake8
+├── .gitignore
+├── .pre-commit-config.yaml
+├── .python-version
+├── alembic.ini
+├── poetry.lock
+├── pyproject.toml
+└── README.md
 ```
 
 ## Configuration
@@ -71,19 +163,7 @@ This application can be configured with environment variables.
 You can create `.env` file in the root directory and place all
 environment variables here.
 
-All environment variabels should start with "SNAPSHOTS_" prefix.
-
-For example if you see in your "snapshots/settings.py" a variable named like
-`random_parameter`, you should provide the "SNAPSHOTS_RANDOM_PARAMETER"
-variable to configure the value. This behaviour can be changed by overriding `env_prefix` property
-in `snapshots.settings.Settings.Config`.
-
-An exmaple of .env file:
-```bash
-SNAPSHOTS_RELOAD="True"
-SNAPSHOTS_PORT="8000"
-SNAPSHOTS_ENVIRONMENT="dev"
-```
+Refer to the `.env.example` file for available environment variable configurations
 
 You can read more about BaseSettings class here: https://pydantic-docs.helpmanual.io/usage/settings/
 
@@ -102,7 +182,8 @@ By default it runs:
 * mypy (validates types);
 * isort (sorts imports in all files);
 * flake8 (spots possibe bugs);
-* yesqa (removes useless `# noqa` comments).
+* autoflake (removes unused imports);
+* pytest (runs all test cases automatically).
 
 
 You can read more about pre-commit here: https://pre-commit.com/
@@ -146,8 +227,8 @@ alembic revision
 If you want to run it in docker, simply run:
 
 ```bash
-docker-compose -f docker/docker-compose.yml --project-directory . run --rm api pytest -vv .
-docker-compose -f docker/docker-compose.yml --project-directory . down
+docker compose -f deploy/docker/compose/snapshots/docker-compose.yml run --rm api pytest -vv .
+docker compose -f deploy/docker/compose/snapshots/docker-compose.yml down
 ```
 
 For running tests on your local machine.

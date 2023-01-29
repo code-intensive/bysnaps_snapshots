@@ -7,23 +7,22 @@ from fastapi_pagination.ext.async_sqlalchemy import paginate
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_404_NOT_FOUND
 
-from snapshots.database.managers.interfaces.snap_manager_interface import ISnapManager
 from snapshots.database.models.models import Snap, SnapItem
 from snapshots.database.utils.model_converter import snap_from_pydantic
 from snapshots.database.utils.prebuilt_queries import (
     fetch_snap_query,
     fetch_snaps_query,
 )
-from snapshots.models.snaps import SnapResponseModel, SnapUpdateModel
+from snapshots.models.pydantic.snaps import SnapModel, SnapUpdateModel
 
 
-class SnapManager(ISnapManager):
+class SnapManager:
     """SnapManager for database related actions"""
 
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
-    async def create(self, orm_snap: SnapResponseModel) -> Snap:
+    async def create(self, orm_snap: SnapModel) -> Snap:
         snap = snap_from_pydantic(orm_snap)
         self._session.add(snap)
         await self._session.flush()
