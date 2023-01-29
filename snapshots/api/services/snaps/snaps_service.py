@@ -2,11 +2,7 @@ import asyncio
 from datetime import datetime
 
 from snapshots.database.models.models import Snap
-from snapshots.models.pydantic.snaps import (
-    SnapCreateModel,
-    SnapResponseModel,
-    SnapUpdateModel,
-)
+from snapshots.models.pydantic.snaps import SnapCreateModel, SnapModel, SnapUpdateModel
 from snapshots.protocols.cloudinary.cloud_snap import CloudSnapProtocol
 from snapshots.protocols.generators.snap_generator import SnapGeneratorProtocol
 from snapshots.protocols.managers.manager import SnapManagerProtocol
@@ -46,19 +42,19 @@ class SnapService:
             self.snap_manager.delete(snap),
         )
 
-    async def _build_snap(self, snap_create: SnapCreateModel) -> SnapResponseModel:
+    async def _build_snap(self, snap_create: SnapCreateModel) -> SnapModel:
         """Private method for snap building.
 
         :param snap_create: A pydantic model for request validation.
 
         :return: A pydantic model mapping to an SQLAlchemy Snap model.
 
-        :rtype: SnapResponseModel.
+        :rtype: SnapModel.
         """
         id = generate_uuid("snap")
         snap_bytes = self.snap_generator.generate_snap(id)
         cloudinary_snap = await self.snap_cloud_service.upload_snap(snap_bytes)
-        return SnapResponseModel(
+        return SnapModel(
             id=id,
             created_at=datetime.now(),
             snap_url=cloudinary_snap.url,

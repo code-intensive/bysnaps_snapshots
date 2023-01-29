@@ -1,9 +1,9 @@
 from fastapi import Depends
 
+from snapshots.api.services.snaps.snaps_service import SnapService
 from snapshots.database.models.models import Snap
 from snapshots.dependencies.service_dependency import get_snap_service
 from snapshots.models.pydantic.snaps import SnapCreateModel, SnapUpdateModel
-from snapshots.services.snaps.snaps_service import SnapService
 
 
 def health_check() -> None:

@@ -1,8 +1,8 @@
+from snapshots.api.services.cloudinary.cloudinary_service import CloudinaryService
+from snapshots.api.services.generators.qrcode_service import QRCodeGeneratorService
+from snapshots.api.services.snaps.snaps_service import SnapService
 from snapshots.database.config.setup import async_session
 from snapshots.database.managers.snap_manager import SnapManager
-from snapshots.services.cloudinary.cloudinary_service import CloudinaryService
-from snapshots.services.generators.qrcode_service import QRCodeGeneratorService
-from snapshots.services.snaps.snaps_service import SnapService
 
 
 async def get_snap_service() -> SnapService:

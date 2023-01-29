@@ -1,13 +1,13 @@
 from typing import Protocol
 
 from snapshots.database.models.models import Snap
-from snapshots.models.pydantic.snaps import SnapResponseModel, SnapUpdateModel
+from snapshots.models.pydantic.snaps import SnapModel, SnapUpdateModel
 
 
 class SnapManagerProtocol(Protocol):
     """SnapManager Protocol"""
 
-    async def create(self, snap_data: SnapResponseModel) -> Snap:
+    async def create(self, snap_data: SnapModel) -> Snap:
         """Stores snapshot details in the database.
 
         :param snap_data: The snapshot data to be stored.

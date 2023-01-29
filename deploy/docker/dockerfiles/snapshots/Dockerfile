@@ -25,9 +25,6 @@ COPY poetry.lock pyproject.toml /app/src/
 # Set working directory to /app/src/
 WORKDIR /app/src
 
-# Installing requirements
-RUN poetry install --no-interaction --no-ansi
-
 # Removing gcc
 RUN apt-get purge -y \
   gcc \
@@ -35,6 +32,8 @@ RUN apt-get purge -y \
 
 # Copying actual application
 COPY . /app/src
-RUN poetry install
+
+# Installing requirements
+RUN poetry install --no-interaction --no-ansi
 
 CMD ["/usr/local/bin/python", "-m", "snapshots"]

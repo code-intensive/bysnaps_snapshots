@@ -2,10 +2,10 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi_pagination import add_pagination
 
+from snapshots.api.routes.api.snap_routes import snaps_router
 from snapshots.config.settings import settings
 from snapshots.database.config.setup import set_up_database
 from snapshots.middlewares.cors_middleware import CORS_MIDDLEWARE_CONFIG
-from snapshots.routes.api.snap_routes import snaps_router
 
 
 def get_app() -> FastAPI:

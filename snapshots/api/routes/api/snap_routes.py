@@ -2,7 +2,7 @@ from fastapi.routing import APIRouter
 from fastapi_pagination import LimitOffsetPage
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
-from snapshots.controllers.api.snap_controllers import (
+from snapshots.api.controllers.snap_controllers import (
     create_snap,
     delete_snap,
     get_snap,
@@ -10,7 +10,7 @@ from snapshots.controllers.api.snap_controllers import (
     health_check,
     update_snap,
 )
-from snapshots.models.pydantic.snaps import SnapResponseModel
+from snapshots.models.pydantic.snaps import SnapModel
 
 snaps_router = APIRouter(prefix="/snap-shots")
 
@@ -32,15 +32,15 @@ snaps_router.add_api_route(
     methods=["post"],
     status_code=HTTP_201_CREATED,
     summary="Create a new snap.",
-    response_model=SnapResponseModel,
-    response_description="Returns a newly created `SnapResponseModel`.",
+    response_model=SnapModel,
+    response_description="Returns a newly created `SnapModel`.",
 )
 
 snaps_router.add_api_route(
     path="",
     endpoint=get_snaps,
     methods=["get"],
-    response_model=LimitOffsetPage[SnapResponseModel],
+    response_model=LimitOffsetPage[SnapModel],
     summary="Retrieve all snaps.",
 )
 
@@ -48,7 +48,7 @@ snaps_router.add_api_route(
     path="/{id}",
     endpoint=get_snap,
     methods=["get"],
-    response_model=SnapResponseModel,
+    response_model=SnapModel,
     summary="Retrieve a snap by it's id.",
 )
 

@@ -3,8 +3,8 @@ version: '3.9'
 services:
   snapshots:
     build:
-      context: .
-      dockerfile: "./snapshots/config/docker/Dockerfile"
+      context: ../../../..
+      dockerfile: "./deploy/docker/dockerfiles/Dockerfile"
     image: bysnaps_snapshots:${SNAPSHOTS_VERSION:-latest}
     container_name: snapshots_api
     pull_policy: never
@@ -15,7 +15,7 @@ services:
       retries: 10
       timeout: 3s
     env_file:
-      - "./snapshots/config/.envs/snapshots/.env"
+      - ../../../../.env
     depends_on:
       redis:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
     hostname: snapshots-database
     container_name: snapshots_postgres
     env_file:
-      - "./snapshots/config/.envs/postgres/.env"
+      - ../../../../.env
     volumes:
       - snapshots-db-data:/var/lib/postgresql/data
     restart: always
@@ -44,7 +44,7 @@ services:
     container_name: snapshots_redis
     restart: always
     env_file:
-      - "./snapshots/config/.envs/redis/.env"
+      - ../../../../.env
     ports:
       - 6379:6379
     healthcheck:
@@ -63,7 +63,7 @@ services:
       timeout: 3s
       retries: 10
     env_file:
-      - "./snapshots/config/.envs/rabbitmq/.env"
+      - ../../../../.env
 
 volumes:
   snapshots-db-data:

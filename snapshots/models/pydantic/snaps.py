@@ -34,7 +34,7 @@ class SnapUpdateModel(BaseSnapModel):
     """An snap containing id, snap_items and description to be updated."""
 
 
-class SnapResponseModel(SnapCreateModel):
+class SnapModel(SnapCreateModel):
     """An existing snap matching the database schema,
     containing id, snap_url and created_at.
     """
