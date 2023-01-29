@@ -5,10 +5,12 @@ name: snapshots-github-actions
 
 on:
   push:
+    branches:
+    - '!main'
 
   pull_request:
     branches:
-      - main
+      - 'main'
 
 #A workflow job running sequentially
 jobs:
@@ -98,6 +100,7 @@ jobs:
       - name: run all tests cases using pytest
         run: "poetry run pytest"
         env:
+          CLOUD_UPLOAD_FOLDER: "buysnaps/snap-shots/"
           CLOUD_NAME: ${{secrets.CLOUD_NAME}}
           CLOUD_API_KEY: ${{secrets.API_KEY}}
           CLOUD_API_SECRET: ${{secrets.API_SECRET}}
